@@ -29,115 +29,14 @@ form.fields.forEach((field, i) => {
 
 module.exports = [
   {
-    path: '/basic',
+    path: '/tests',
     component: {
       template: '<router-view></router-view>'
     },
     children: [
       {
-        path: 'icon',
-        component: 'tests',
-        props: {
-          component: 'icon',
-          tests: {
-            name: 'check'
-          }
-        }
-      }, {
-        path: 'button',
-        component: 'tests',
-        props: {
-          component: 'button',
-          tests: {
-            data: {msg: 'You click me!'},
-            click: function (data) {
-              window.alert(data.msg)
-            },
-            icon: 'play',
-            label: 'Click me with router view!'
-          }
-        }
-      }, {
-        path: 'data',
-        component: 'tests',
-        props: {
-          component: 'data',
-          tests: {
-            model: {id: '2018-12-25'},
-            id: 'id',
-            format: 'date'
-          }
-        }
-      }, {
-        path: 'input',
-        component: 'tests',
-        props: {
-          component: 'input',
-          tests: {
-            model: {id: 'Test'},
-            id: 'id'
-          }
-        }
-      }, {
-        path: 'text',
-        component: 'tests',
-        props: {
-          component: 'text',
-          tests: {
-            model: {id: 'Test'},
-            id: 'id'
-          }
-        }
-      }, {
-        path: 'select',
-        component: 'tests',
-        props: {
-          component: 'select',
-          tests: {
-            model: {id: 'Gauss'},
-            id: 'id',
-            source: function (model, callback) {
-              callback([
-                "Eistein",
-                "Newton",
-                "Gauss",
-                "Euler",
-                "Riemann"
-              ])
-            }
-          }
-        }
-      }, {
-        path: 'file',
-        component: 'tests',
-        props: {
-          component: 'file',
-          tests: {
-            model: {},
-            id: 'id'
-          }
-        }
-      }, {
-        path: 'item',
-        component: 'tests',
-        props: {
-          component: 'item',
-          tests: {
-            model: {id: 'Test'},
-            id: 'id'
-          }
-        }
-      }
-    ]
-  }, {
-    path: '/form',
-    component: {
-      template: '<router-view></router-view>'
-    },
-    children: [
-      {
-        path: 'simple',
-        component: 'tests',
+        path: 'form',
+        component: 'tmx-tests',
         props: {
           component: 'form',
           tests: {
@@ -146,24 +45,16 @@ module.exports = [
           }
         }
       }, {
-        path: 'complete',
-        component: 'tests',
+        path: 'modal',
+        component: 'tmx-tests',
         props: {
-          component: 'form',
+          component: 'modal',
           tests: {
-            label: 'Complete form',
-            icon: 'cog',
-            buttons: [
-              {
-                icon: 'play',
-                type: 'primary',
-                label: 'Submit'
-              }
-            ],
             model: form.model,
             fields: form.fields,
-            submit: function (data) {
-              window.alert(JSON.stringify(data, undefined, 2))
+            submit: function () {
+              console.log('submited')
+              console.log(this.model)
             }
           }
         }
@@ -171,6 +62,6 @@ module.exports = [
     ]
   }, {
     path: '*',
-    redirect: '/form/complete'
+    redirect: '/tests/modal'
   }
 ]

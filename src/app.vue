@@ -9,8 +9,8 @@
 
   Vue.use(VueRouter)
 
-  Vue.component('tests', tests)
-  Vue.component('playground', playground)
+  Vue.component('tmx-tests', tests)
+  Vue.component('tmx-playground', playground)
   Vue.component('vue-tree-nav', treeNav)
 
   var setComponent = (routes) => {

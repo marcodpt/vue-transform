@@ -1,11 +1,11 @@
 <script type="text/babel">
   import T from 'libt'
-  import v from '../index.vue'
+  import tmx from '../index.vue'
 
   var components = {}
-  Object.keys(v).forEach(key => {
+  Object.keys(tmx).forEach(key => {
     if (key !== 'lib') {
-      components[`v-${key}`] = v[key]
+      components[`tmx-${key}`] = tmx[key]
     }
   })
 
@@ -46,7 +46,7 @@
         }
       },
       getProps: function () {
-        var name = 'v-' + this.component
+        var name = 'tmx-' + (this.component === 'modal' ? 'form' : this.component)
         return this.$options.components[name].props
       }
     },
@@ -61,21 +61,13 @@
 <template>
   <div>
     <div v-if="ready">
-      <v-button v-if="component === 'button'" v-bind="tests" />
-      <v-data v-if="component === 'data'" v-bind="tests" />
-      <v-file v-if="component === 'file'" v-bind="tests" />
-      <v-form v-if="component === 'form'" v-bind="tests" />
-      <v-icon v-if="component === 'icon'" v-bind="tests" />
-      <v-input v-if="component === 'input'" v-bind="tests" />
-      <v-item v-if="component === 'item'" v-bind="tests" />
-      <v-select v-if="component === 'select'" v-bind="tests" />
-      <v-text v-if="component === 'text'" v-bind="tests" />
+      <tmx-form v-if="component === 'form'" v-bind="tests" />
     </div>
-    <v-playground
+    <tmx-playground
       :model="tests"
       :name="component"
       :props="getProps()"
       :callback="callback"
-    ></v-playground>
+    ></tmx-playground>
   </div>
 </template>

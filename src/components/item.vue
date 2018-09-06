@@ -1,29 +1,14 @@
 <script type="text/babel">
+  import T from 'libt'
   import lib from '../lib.js'
-  import data from './data.vue'
-  import input from './input.vue'
-  import text from './text.vue'
-  import file from './file.vue'
-  import select from './select.vue'
+  import inputag from 'vue-inputag'
 
   module.exports = {
     mixins: [lib],
     components: {
-      'v-data': data,
-      'v-input': input,
-      'v-text': text,
-      'v-file': file,
-      'v-select': select
+      'vue-inputag': inputag
     },
     props: {
-      model: {
-        type: Object,
-        required: true
-      },
-      id: {
-        type: String,
-        required: true
-      },
       static: {
         type: Boolean,
         default: false
@@ -39,54 +24,11 @@
         type: String,
         default: 'string',
         validator: function (value) {
-          if (typeof value === 'function') {
-            return lib.methods.isType(value)
-          }
           return !value || lib.methods.isType(value.split(':')[0])
         }
       },
       label: {
         type: String
-      },
-      placeholder: {
-        type: String,
-        default: ''
-      },
-      dependencies: {
-        type: Array,
-        default: function () {
-          return []
-        }
-      },
-      source: {
-        type: Function
-      },
-      options: {
-        type: Array
-      },
-      method: {
-        type: Function
-      },
-      required: {
-        type: Boolean,
-        default: false
-      },
-      min: {},
-      max: {},
-      minLen: {
-        type: [Number, String]
-      },
-      maxLen: {
-        type: [Number, String]
-      },
-      watchlen: {
-        type: [Number, String]
-      },
-      validate: {
-        type: Array,
-        default: function () {
-          return []
-        }
       },
       error: {
         type: String,
@@ -100,48 +42,9 @@
       compact: {
         type: Boolean,
         default: false
-      },
-      multiple: {
-        type: Boolean,
-        default: false
-      },
-      href: {
-        type: String,
-        default: ''
       }
     },
     methods: {
-      input: function () {
-        var input = 'input'
-        var F = this.format.split(':')
-
-        if (this.static) {
-          input = 'static'
-        } else if (this.source || this.options) {
-          input = 'select'
-        } else if (F[0] === 'boolean') {
-          input = 'select'
-        } else if (F[0] === 'string') {
-          if (F.indexOf('file') !== -1) {
-            input = 'file'
-          } else if (F.indexOf('text') !== -1) {
-            input = 'text'
-          }
-        } else if (F[0] === 'json') {
-          input = 'text'
-        }
-
-        return input
-      },
-      parseHref: function (href) {
-        Object.keys(this.model).forEach(key => {
-          while (href.indexOf(`:${key}`) !== -1 && this.model[key] !== undefined) {
-            href = href.replace(`:${key}`, this.model[key])
-          }
-        })
-
-        return href
-      },
       getOptions: function () {
         return this.format === 'boolean' ? [
           {
@@ -151,55 +54,48 @@
             id: 1,
             label: this.translate('trueLabel')
           }
-        ] : this.options
-      }
-    },
-    data: function () {
-      return {
-        elem: {
-          model: this.model,
-          id: this.id,
-          format: this.format,
-          placeholder: this.placeholder,
-          source: this.source,
-          options: this.getOptions(),
-          dependencies: this.dependencies,
-          required: this.required,
-          size: this.size,
-          multiple: this.multiple,
-          href: this.parseHref(this.href)
+        ] : this.$attrs.options
+      },
+      getType: function () {
+        var F = this.format.split(':')
+
+        if (this.static) {
+          return ''
         }
-      }
-    },
-    watch: {
-      model: function () {
-        this.$data.elem.model = this.model
-        this.$data.elem.href = this.parseHref(this.href)
+
+        if (this.$attrs.options || this.$attrs.source || F[0] === 'boolean') {
+          return 'select'
+        } else if (F[0] === 'date') {
+          return 'date'
+        } else if (F[0] === 'json') {
+          return 'textarea'
+        } else if (F.indexOf('pass') !== -1) {
+          return 'password'
+        } else if (F.indexOf('file') !== -1) {
+          return 'file'
+        } else if (F.indexOf('color') !== -1) {
+          return 'color'
+        } else if (F.indexOf('text') !== -1) {
+          return 'textarea'
+        } else if (F.indexOf('pgb') !== -1) {
+          return this.static ? 'progressbar' : 'range'
+        } else {
+          return 'text'
+        }
       },
-      id: function () {
-        this.$data.elem.id = this.id
+      getClass: function () {
+        if (this.static) {
+          return 'form-control-static'
+        } else if (['select', 'checkbox'].indexOf(this.getType()) === -1) {
+          return 'form-control input-' + this.size
+        } else {
+          return ''
+        }
       },
-      format: function () {
-        this.$data.elem.format = this.format
-        this.$data.elem.options = this.getOptions()
-      },
-      placeholder: function () {
-        this.$data.elem.placeholder = this.placeholder
-      },
-      source: function () {
-        this.$data.elem.source = this.source
-      },
-      options: function () {
-        this.$data.elem.options = this.getOptions()
-      },
-      dependencies: function () {
-        this.$data.elem.dependencies = this.dependencies
-      },
-      size: function () {
-        this.$data.elem.size = this.size
-      },
-      href: function () {
-        this.$data.elem.href = this.parseHref(this.href)
+      getFormatter: function () {
+        return x => {
+          return T.format(x, this.format, this.translate)
+        }
       }
     }
   }
@@ -209,6 +105,7 @@
   <div
     :class="[
       compact ? '' : 'form-group', 
+      'form-group-' + size,
       error ? 'has-error': '', 
       col > 0 ? ('col-xs-' + Math.floor(12 / col)) : ''
     ]"
@@ -216,19 +113,25 @@
     <label
       v-if="label !== '' && col"
       :class="['control-label', 'col-xs-' + (2 * col)]"
-      :style="{
-        'font-size': (elem.size === 'lg' ? '130%' : (elem.size === 'sm' ? '80%' : null))
-      }"
     >
-      {{label || id}}:
+      {{label || $attrs.id}}:
     </label>
     <div :class="['col-xs-' + (12 - (label !== '' ? 2 * col : 0))]">
-      <v-select v-if="input() === 'select'" v-bind="elem"></v-select>
-      <v-file v-else-if="input() === 'file'" v-bind="elem"></v-file>
-      <v-text v-else-if="input() === 'text'" v-bind="elem"></v-text>
-      <v-input v-else-if="input() === 'input'" v-bind="elem"></v-input>
+      <vue-inputag
+        v-if="!static"
+        v-bind="$attrs"
+        :formatter="getFormatter()"
+        :class="getClass()"
+        :options="getOptions()"
+        :type="getType()"
+      />
       <p v-else class="form-control-static">
-        <v-data v-bind="elem"></v-data>
+        <vue-inputag
+          v-bind="$attrs"
+          :formatter="getFormatter()"
+          :options="getOptions()"
+          :type="getType()"
+        />
       </p>
       <span class="help-block" v-if="error">
         {{error}}

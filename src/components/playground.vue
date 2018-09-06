@@ -6,7 +6,7 @@
   module.exports = {
     mixins: [lib],
     components: {
-      'v-form': form
+      'tmx-form': form
     },
     props: {
       model: {
@@ -191,7 +191,7 @@
 </script>
 
 <template>
-  <v-form
+  <tmx-form
     v-bind="form" :submit="submit" icon="cog" :label="'Live Playground '+name"
     :buttons="[{
       type: 'primary',

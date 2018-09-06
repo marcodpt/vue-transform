@@ -1,16 +1,14 @@
 <script type="text/babel">
   import T from 'libt'
   import lib from '../lib.js'
-  import icon from './icon.vue'
-  import button from './button.vue'
-  import item from './item.vue'
+  import tmxIcon from './icon.vue'
+  import tmxItem from './item.vue'
 
   module.exports = {
     mixins: [lib],
     components: {
-      'v-icon': icon,
-      'v-button': button,
-      'v-item': item
+      'tmx-icon': tmxIcon,
+      'tmx-item': tmxItem
     },
     props: {
       model: {
@@ -124,11 +122,13 @@
       },
       validateModel: function () {
         var valid = true
+
         this.fields.forEach((field, i) => {
+          field.format = field.format || 'string'
+          this.$set(this.model, field.id, T.parse(field.format)(this.model[field.id]))
           this.$set(this.fields[i], 'error', '')
           var error = false
           var empty = this.model[field.id] == null
-          field.format = field.format || 'string'
           var label = field.label || field.placeholder || field.id
           if (field.static) {
             return
@@ -141,40 +141,6 @@
               valid = false
               error = true
             }
-          }
-          if (!error && empty && field.required) {
-            if (field.format.substr(0, 6) === 'string' && !field.options && !field.src) {
-              this.$set(this.model, field.id, '')
-            } else {
-              var err = this.translate('required')
-              this.$set(this.fields[i], 'error', `${label} ${err}`)
-              valid = false
-              error = true
-            }
-          }
-          if (!error && !empty && field.min > this.model[field.id]) {
-            var err = T.replaceAll('$min', T.format(field.min, field.format, this.translate))(this.translate('min'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.max < this.model[field.id]) {
-            var err = T.replaceAll('$max', T.format(field.max, field.format, this.translate))(this.translate('max'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.minLen > String(this.model[field.id]).length) {
-            var err = T.replaceAll('$minLen', field.minLen)(this.translate('minLen'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.maxLen < String(this.model[field.id]).length) {
-            var err = T.replaceAll('$maxLen', field.maxLen)(this.translate('maxLen'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
           }
           if (!error && !empty && field.validate instanceof Array) {
             field.validate.forEach(v => {
@@ -200,16 +166,16 @@
   <div class="thumbnail">
     <div v-if="onClose || label || icon" class="modal-header">
       <button v-if="onClose" type="button" class="close" @click="onClose">
-        <v-icon name="times"/>
+        <tmx-icon name="times"/>
       </button>
       <h4 v-if="label || icon" style="text-align:center" class="modal-title">
-        <v-icon :name="icon" /> {{label}}
+        <tmx-icon :name="icon" /> {{label}}
       </h4>
     </div>
     <div v-if="hasFields() || text" class="modal-body">
       <div style="clear: both;"></div>
       <form class="form-horizontal" @submit.prevent="submit">
-        <v-item
+        <tmx-item
           v-for="(field, index) in fields2"
           :key="index"
           :model="model"
@@ -218,7 +184,7 @@
           :compact="compact"
           :size="field.size || size"
         >
-        </v-item>
+        </tmx-item>
       </form>
       <div style="clear: both;"></div>
       <div 
@@ -229,12 +195,19 @@
       <div style="clear: both;"></div>
     </div>
     <div v-if="buttons.length" class="modal-footer">
-      <v-button
-        v-for="button in buttons"
-        v-bind="button"
-        :click="button.click || run"
-        :size="button.size || size"
-      />
+      <button
+        v-for="b in buttons"
+        :class="[
+          'btn',
+          'btn-' + b.type,
+          b.block ? 'btn-block' : '',
+          b.size ? 'btn-' + b.size : 'btn-' + size
+        ]"
+        @click="b.click ? b.click(model) : run()"
+      >
+        <tmx-icon :name="b.icon"/>
+        {{b.label}}
+      </button>
     </div>
   </div>
 </template>
