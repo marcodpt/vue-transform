@@ -2,15 +2,17 @@
   import Vue from '../node_modules/vue/dist/vue.js'
   import VueRouter from 'vue-router'
   import treeNav from 'vue-tree-nav'
-  import tests from './components/tests.vue'
-  import playground from './components/playground.vue'
+  import tmxModal from './components/modal.vue'
+  import tmxTests from './components/tests.vue'
+  import tmxPlayground from './components/playground.vue'
 
   import routes from './routes.js'
 
   Vue.use(VueRouter)
 
-  Vue.component('tmx-tests', tests)
-  Vue.component('tmx-playground', playground)
+  Vue.component('tmx-tests', tmxTests)
+  Vue.component('tmx-playground', tmxPlayground)
+  Vue.component('tmx-modal', tmxModal)
   Vue.component('vue-tree-nav', treeNav)
 
   var setComponent = (routes) => {
@@ -36,10 +38,11 @@
       routes: routes,
       right: [
         {
-          href: "https://github.com/marcodpt/vue-transform",
+          href: "https://github.com/marcodpt/tmx",
           icon: "brands/github"
         }
-      ]
+      ],
+      modal: null
     }
   }).$mount('#app')
 </script>

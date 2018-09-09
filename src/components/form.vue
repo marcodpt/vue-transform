@@ -1,14 +1,14 @@
 <script type="text/babel">
   import T from 'libt'
   import lib from '../lib.js'
-  import tmxIcon from './icon.vue'
-  import tmxItem from './item.vue'
+  import icon from 'vue-awesome'
+  import item from './item.vue'
 
   module.exports = {
     mixins: [lib],
     components: {
-      'tmx-icon': tmxIcon,
-      'tmx-item': tmxItem
+      'icon': icon,
+      'item': item
     },
     props: {
       model: {
@@ -142,6 +142,40 @@
               error = true
             }
           }
+          if (!error && empty && field.required) {
+            if (field.format.substr(0, 6) === 'string' && !field.options && !field.src) {
+              this.$set(this.model, field.id, '')
+            } else {
+              var err = this.translate('required')
+              this.$set(this.fields[i], 'error', `${label} ${err}`)
+              valid = false
+              error = true
+            }
+          }
+          if (!error && !empty && field.min > this.model[field.id]) {
+            var err = T.replaceAll('$min', T.format(field.min, field.format, this.translate))(this.translate('min'))
+            this.$set(this.fields[i], 'error', `${label} ${err}`)
+            valid = false
+            error = true
+          }
+          if (!error && !empty && field.max < this.model[field.id]) {
+            var err = T.replaceAll('$max', T.format(field.max, field.format, this.translate))(this.translate('max'))
+            this.$set(this.fields[i], 'error', `${label} ${err}`)
+            valid = false
+            error = true
+          }
+          if (!error && !empty && field.minLen > String(this.model[field.id]).length) {
+            var err = T.replaceAll('$minLen', field.minLen)(this.translate('minLen'))
+            this.$set(this.fields[i], 'error', `${label} ${err}`)
+            valid = false
+            error = true
+          }
+          if (!error && !empty && field.maxLen < String(this.model[field.id]).length) {
+            var err = T.replaceAll('$maxLen', field.maxLen)(this.translate('maxLen'))
+            this.$set(this.fields[i], 'error', `${label} ${err}`)
+            valid = false
+            error = true
+          }
           if (!error && !empty && field.validate instanceof Array) {
             field.validate.forEach(v => {
               if (!error && !T.evaluate(v.assert)(this.model)) {
@@ -166,16 +200,16 @@
   <div class="thumbnail">
     <div v-if="onClose || label || icon" class="modal-header">
       <button v-if="onClose" type="button" class="close" @click="onClose">
-        <tmx-icon name="times"/>
+        <icon name="times" class="glyphicon" />
       </button>
       <h4 v-if="label || icon" style="text-align:center" class="modal-title">
-        <tmx-icon :name="icon" /> {{label}}
+        <icon v-if="icon" :name="icon" class="glyphicon" /> {{label}}
       </h4>
     </div>
     <div v-if="hasFields() || text" class="modal-body">
       <div style="clear: both;"></div>
       <form class="form-horizontal" @submit.prevent="submit">
-        <tmx-item
+        <item
           v-for="(field, index) in fields2"
           :key="index"
           :model="model"
@@ -184,7 +218,7 @@
           :compact="compact"
           :size="field.size || size"
         >
-        </tmx-item>
+        </item>
       </form>
       <div style="clear: both;"></div>
       <div 
@@ -205,7 +239,7 @@
         ]"
         @click="b.click ? b.click(model) : run()"
       >
-        <tmx-icon :name="b.icon"/>
+        <icon v-if="b.icon" :name="b.icon" class="glyphicon" />
         {{b.label}}
       </button>
     </div>

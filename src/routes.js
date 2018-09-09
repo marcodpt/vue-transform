@@ -1,4 +1,5 @@
 var form = require('./json/form.json')
+var validate = require('./json/validate.json')
 
 form.fields.forEach((field, i) => {
   if (field.source === '&country') {
@@ -29,7 +30,7 @@ form.fields.forEach((field, i) => {
 
 module.exports = [
   {
-    path: '/tests',
+    path: '/components',
     component: {
       template: '<router-view></router-view>'
     },
@@ -62,6 +63,6 @@ module.exports = [
     ]
   }, {
     path: '*',
-    redirect: '/tests/modal'
+    redirect: '/components/form'
   }
 ]
