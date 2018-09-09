@@ -105,7 +105,7 @@
       },
       load: function () {
         if (!(this.fields instanceof Array)) {
-          T.sync(this.$data.fields2, this.setFields(this.model))
+          T.sync(this.$data.fields2, T.setFields(this.model))
         } else {
           T.sync(this.$data.fields2, this.fields)
         }
@@ -153,25 +153,25 @@
             }
           }
           if (!error && !empty && field.min > this.model[field.id]) {
-            var err = T.replaceAll('$min', T.format(field.min, field.format, this.translate))(this.translate('min'))
+            var err = T.replaceAll('{$}', T.format(field.min, field.format, this.translate))(this.translate('min'))
             this.$set(this.fields[i], 'error', `${label} ${err}`)
             valid = false
             error = true
           }
           if (!error && !empty && field.max < this.model[field.id]) {
-            var err = T.replaceAll('$max', T.format(field.max, field.format, this.translate))(this.translate('max'))
+            var err = T.replaceAll('{$}', T.format(field.max, field.format, this.translate))(this.translate('max'))
             this.$set(this.fields[i], 'error', `${label} ${err}`)
             valid = false
             error = true
           }
           if (!error && !empty && field.minLen > String(this.model[field.id]).length) {
-            var err = T.replaceAll('$minLen', field.minLen)(this.translate('minLen'))
+            var err = T.replaceAll('{$}', field.minLen)(this.translate('minLen'))
             this.$set(this.fields[i], 'error', `${label} ${err}`)
             valid = false
             error = true
           }
           if (!error && !empty && field.maxLen < String(this.model[field.id]).length) {
-            var err = T.replaceAll('$maxLen', field.maxLen)(this.translate('maxLen'))
+            var err = T.replaceAll('{$}', field.maxLen)(this.translate('maxLen'))
             this.$set(this.fields[i], 'error', `${label} ${err}`)
             valid = false
             error = true
