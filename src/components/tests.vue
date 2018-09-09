@@ -12,10 +12,6 @@
   module.exports = {
     components: components,
     props: {
-      case: {
-        type: String,
-        default: ''
-      },
       component: {
         type: String,
         default: ''
@@ -25,34 +21,39 @@
         default: function () {
           return {}
         }
-      },
-      isReady: {
-        type: Function
       }
     },
     data: function () {
       return {
-        ready: false
+        ready: false,
+        form: null,
+        model: null,
+        fields: null
       }
     },
     methods: {
-      callback: function () {
-        this.$data.ready = true
-        if (this.isReady) {
-          this.isReady()
-        } 
+      submit: function (data) {
         if (this.component === 'modal') {
-          this.$root.$data.modal = T.copy(this.tests)
+          this.$root.$data.modal = T.copy(data)
+        } else {
+          this.$data.form = T.copy(data)
         }
+        this.$data.ready = true
       },
-      getProps: function () {
-        var name = 'tmx-' + (this.component === 'modal' ? 'form' : this.component)
-        return this.$options.components[name].props
+      build: function () {
+        this.$data.ready = false
+        this.$data.model = T.copy(this.tests)
+        this.$data.fields = T.copy(this.$options.components[
+          'tmx-' + (this.component === 'modal' ? 'form' : this.component)
+        ].props)
       }
+    },
+    mounted: function () {
+      this.build()
     },
     watch: {
       component: function () {
-        this.$data.ready = false
+        this.build()
       }
     }
   }
@@ -61,13 +62,19 @@
 <template>
   <div>
     <div v-if="ready">
-      <tmx-form v-if="component === 'form'" v-bind="tests" />
+      <tmx-form v-if="component === 'form'" v-bind="form" />
     </div>
-    <tmx-playground
-      :model="tests"
-      :name="component"
-      :props="getProps()"
-      :callback="callback"
-    ></tmx-playground>
+    <tmx-form
+      icon="cog"
+      :label="'Live Playground '+component"
+      :model="model"
+      :fields="fields"
+      :submit="submit"
+      :buttons="[{
+        type: 'primary',
+        icon: 'cog',
+        label: 'Rebuild'
+      }]"
+    ></tmx-form>
   </div>
 </template>

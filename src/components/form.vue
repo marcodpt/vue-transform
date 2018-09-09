@@ -18,7 +18,7 @@
         }
       },
       fields: {
-        type: Array
+        type: [Array, Object]
       },
       submit: {
         type: Function
@@ -63,7 +63,9 @@
       return {
         backup: T.copy(this.model),
         compact: !this.submit && !this.onChange,
-        fields2: []
+        Fields: [],
+        compile: [],
+        objMode: false
       }
     },
     mounted: function () {
@@ -93,25 +95,150 @@
     },
     methods: {
       run: function () {
-        if (typeof this.submit === 'function' && this.validateModel()) {
+        if (this.$data.objMode) {
+          var model = T.copy(this.model)
+          this.$data.compile.forEach(key => {
+            if (model[key] !== '') {
+              try {
+                eval(`model[key] = ${model[key]}`)
+              } catch (err) {
+                T.debug('Eval error', key, model[key], err.toString())
+                model[key] = undefined
+              }
+            } else {
+              model[key] = undefined
+            }
+          })
+
+          this.$data.Fields.forEach(field => {
+            if (field.format === 'boolean' && model[field.id] !== undefined) {
+              model[key] = model[key] ? true : false
+            } 
+          })
+          this.submit(model)
+        } else if (typeof this.submit === 'function' && this.validateModel()) {
           this.submit(this.model)
           if (this.onClose) {
             this.onClose()
           }
         }
       },
-      hasFields: function () {
-        return (this.fields && this.fields.length) || Object.keys(this.model).length
-      },
       load: function () {
-        if (!(this.fields instanceof Array)) {
-          T.sync(this.$data.fields2, T.setFields(this.model))
+        T.sync(this.$data.compile, [])
+        this.$data.objMode = false
+
+        if (this.fields == null) {
+          T.sync(this.$data.Fields, T.setFields(this.model))
+        } else if (this.fields instanceof Array) {
+          T.sync(this.$data.Fields, this.fields)
         } else {
-          T.sync(this.$data.fields2, this.fields)
+          this.$data.objMode = true
+          var fields = [
+            {
+              id: 'style',
+              format: 'string'
+            }, {
+              id: 'class',
+              format: 'string'
+            }
+          ]
+          var model = {}
+          
+          this.$data.compile = []
+          Object.keys(this.fields).forEach(key => {
+            var prop = this.fields[key]
+            if (prop.default !== undefined) {
+              if (typeof prop.default === 'function' && prop.type !== Function) {
+                model[key] = prop.default()
+              } else {
+                model[key] = prop.default
+              }
+            }
+
+            if (prop.type instanceof Array) {
+              var type = this.getType(prop.type[0])
+            } else {
+              var type = this.getType(prop.type)
+            }
+
+            var format = 'string'
+            if (type === 'Boolean') {
+              format = 'boolean'
+            } else if (type === 'Number') {
+              format = 'number'
+            } else if (type === 'Array' || type === 'Object' || type === 'Function') {
+              format = 'string:text'
+              this.$data.compile.push(key)
+            }
+
+            fields.push({
+              id: key,
+              label: `${key} (${type})`,
+              format: format,
+              options: this.getOptions(prop.validator),
+              required: prop.required
+            })
+          })
+
+          model = T.merge(model)(this.model)
+          var F = []
+          model = T.iterate(value => {
+            if (typeof value === 'function') {
+              F.push(String(value))
+              return `&&F:${F.length - 1}`
+            } else {
+              return value
+            }
+          })(model)
+          Object.keys(model).forEach(key => {
+            if (typeof model[key] === 'object' && model[key] != null) {
+              model[key] = JSON.stringify(model[key], undefined, 2)
+              F.forEach((f, i) => {
+                model[key] = T.replaceAll(`"&&F:${i}"`, f)(model[key])
+              })
+            } else if (typeof model[key] === 'string' && model[key].substr(0, 4) === `&&F:`) {
+              F.forEach((f, i) => {
+                model[key] = model[key] === `&&F:${i}` ? f : model[key]
+              })
+            }
+          })
+
+          T.sync(this.model, model, this.$set)
+          T.sync(this.$data.Fields, fields)
+          this.run()
         }
-        this.$data.fields2.forEach(field => {
+
+        this.$data.Fields.forEach(field => {
           this.$set(this.model, field.id, T.parse(field.format)(this.model[field.id]))
         })
+      },
+      getOptions: function (validator) {
+        if (validator) {
+          var options = validator(T.identity)
+          if (options instanceof Array) {
+            return options
+          }
+        }
+      },
+      getType: function (type) {
+        var ret = ''
+        if (type === String) {
+          ret = 'String'
+        } else if (type === Number) {
+          ret = 'Number'
+        } else if (type === Boolean) {
+          ret = 'Boolean'
+        } else if (type === Object) {
+          ret = 'Object'
+        } else if (type === Array) {
+          ret = 'Array'
+        } else if (type === Function) {
+          ret = 'Function'
+        } else {
+          ret = 'Object'
+        }
+
+        return ret
       },
       getClass: function () {
         if (['success', 'info', 'warning', 'danger'].indexOf(this.alert) !== -1) {
@@ -206,11 +333,11 @@
         <icon v-if="icon" :name="icon" class="glyphicon" /> {{label}}
       </h4>
     </div>
-    <div v-if="hasFields() || text" class="modal-body">
+    <div v-if="Fields.length || text" class="modal-body">
       <div style="clear: both;"></div>
       <form class="form-horizontal" @submit.prevent="submit">
         <item
-          v-for="(field, index) in fields2"
+          v-for="(field, index) in Fields"
           :key="index"
           :model="model"
           v-bind="field"

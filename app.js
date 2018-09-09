@@ -24681,6 +24681,14 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 ;(function(){
 'use strict';
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _typeof2 = require('babel-runtime/helpers/typeof');
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
 var _keys = require('babel-runtime/core-js/object/keys');
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -24717,7 +24725,7 @@ module.exports = {
       }
     },
     fields: {
-      type: Array
+      type: [Array, Object]
     },
     submit: {
       type: Function
@@ -24762,7 +24770,9 @@ module.exports = {
     return {
       backup: _libt2.default.copy(this.model),
       compact: !this.submit && !this.onChange,
-      fields2: []
+      Fields: [],
+      compile: [],
+      objMode: false
     };
   },
   mounted: function mounted() {
@@ -24794,27 +24804,150 @@ module.exports = {
   },
   methods: {
     run: function run() {
-      if (typeof this.submit === 'function' && this.validateModel()) {
+      if (this.$data.objMode) {
+        var model = _libt2.default.copy(this.model);
+        this.$data.compile.forEach(function (key) {
+          if (model[key] !== '') {
+            try {
+              eval('model[key] = ' + model[key]);
+            } catch (err) {
+              _libt2.default.debug('Eval error', key, model[key], err.toString());
+              model[key] = undefined;
+            }
+          } else {
+            model[key] = undefined;
+          }
+        });
+
+        this.$data.Fields.forEach(function (field) {
+          if (field.format === 'boolean' && model[field.id] !== undefined) {
+            model[key] = model[key] ? true : false;
+          }
+        });
+        this.submit(model);
+      } else if (typeof this.submit === 'function' && this.validateModel()) {
         this.submit(this.model);
         if (this.onClose) {
           this.onClose();
         }
       }
     },
-    hasFields: function hasFields() {
-      return this.fields && this.fields.length || (0, _keys2.default)(this.model).length;
-    },
     load: function load() {
       var _this2 = this;
 
-      if (!(this.fields instanceof Array)) {
-        _libt2.default.sync(this.$data.fields2, _libt2.default.setFields(this.model));
+      _libt2.default.sync(this.$data.compile, []);
+      this.$data.objMode = false;
+
+      if (this.fields == null) {
+        _libt2.default.sync(this.$data.Fields, _libt2.default.setFields(this.model));
+      } else if (this.fields instanceof Array) {
+        _libt2.default.sync(this.$data.Fields, this.fields);
       } else {
-        _libt2.default.sync(this.$data.fields2, this.fields);
+        this.$data.objMode = true;
+        var fields = [{
+          id: 'style',
+          format: 'string'
+        }, {
+          id: 'class',
+          format: 'string'
+        }];
+        var model = {};
+
+        this.$data.compile = [];
+        (0, _keys2.default)(this.fields).forEach(function (key) {
+          var prop = _this2.fields[key];
+          if (prop.default !== undefined) {
+            if (typeof prop.default === 'function' && prop.type !== Function) {
+              model[key] = prop.default();
+            } else {
+              model[key] = prop.default;
+            }
+          }
+
+          if (prop.type instanceof Array) {
+            var type = _this2.getType(prop.type[0]);
+          } else {
+            var type = _this2.getType(prop.type);
+          }
+
+          var format = 'string';
+          if (type === 'Boolean') {
+            format = 'boolean';
+          } else if (type === 'Number') {
+            format = 'number';
+          } else if (type === 'Array' || type === 'Object' || type === 'Function') {
+            format = 'string:text';
+            _this2.$data.compile.push(key);
+          }
+
+          fields.push({
+            id: key,
+            label: key + ' (' + type + ')',
+            format: format,
+            options: _this2.getOptions(prop.validator),
+            required: prop.required
+          });
+        });
+
+        model = _libt2.default.merge(model)(this.model);
+        var F = [];
+        model = _libt2.default.iterate(function (value) {
+          if (typeof value === 'function') {
+            F.push(String(value));
+            return '&&F:' + (F.length - 1);
+          } else {
+            return value;
+          }
+        })(model);
+        (0, _keys2.default)(model).forEach(function (key) {
+          if ((0, _typeof3.default)(model[key]) === 'object' && model[key] != null) {
+            model[key] = (0, _stringify2.default)(model[key], undefined, 2);
+            F.forEach(function (f, i) {
+              model[key] = _libt2.default.replaceAll('"&&F:' + i + '"', f)(model[key]);
+            });
+          } else if (typeof model[key] === 'string' && model[key].substr(0, 4) === '&&F:') {
+            F.forEach(function (f, i) {
+              model[key] = model[key] === '&&F:' + i ? f : model[key];
+            });
+          }
+        });
+
+        _libt2.default.sync(this.model, model, this.$set);
+        _libt2.default.sync(this.$data.Fields, fields);
+        this.run();
       }
-      this.$data.fields2.forEach(function (field) {
+
+      this.$data.Fields.forEach(function (field) {
         _this2.$set(_this2.model, field.id, _libt2.default.parse(field.format)(_this2.model[field.id]));
       });
+    },
+    getOptions: function getOptions(validator) {
+      if (validator) {
+        var options = validator(_libt2.default.identity);
+        if (options instanceof Array) {
+          return options;
+        }
+      }
+    },
+    getType: function getType(type) {
+      var ret = '';
+      if (type === String) {
+        ret = 'String';
+      } else if (type === Number) {
+        ret = 'Number';
+      } else if (type === Boolean) {
+        ret = 'Boolean';
+      } else if (type === Object) {
+        ret = 'Object';
+      } else if (type === Array) {
+        ret = 'Array';
+      } else if (type === Function) {
+        ret = 'Function';
+      } else {
+        ret = 'Object';
+      }
+
+      return ret;
     },
     getClass: function getClass() {
       if (['success', 'info', 'warning', 'danger'].indexOf(this.alert) !== -1) {
@@ -24903,7 +25036,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"thumbnail"},[(_vm.onClose || _vm.label || _vm.icon)?_c('div',{staticClass:"modal-header"},[(_vm.onClose)?_c('button',{staticClass:"close",attrs:{"type":"button"},on:{"click":_vm.onClose}},[_c('icon',{staticClass:"glyphicon",attrs:{"name":"times"}})],1):_vm._e(),_vm._v(" "),(_vm.label || _vm.icon)?_c('h4',{staticClass:"modal-title",staticStyle:{"text-align":"center"}},[(_vm.icon)?_c('icon',{staticClass:"glyphicon",attrs:{"name":_vm.icon}}):_vm._e(),_vm._v(" "+_vm._s(_vm.label)+"\n    ")],1):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.hasFields() || _vm.text)?_c('div',{staticClass:"modal-body"},[_c('div',{staticStyle:{"clear":"both"}}),_vm._v(" "),_c('form',{staticClass:"form-horizontal",on:{"submit":function($event){$event.preventDefault();return _vm.submit($event)}}},_vm._l((_vm.fields2),function(field,index){return _c('item',_vm._b({key:index,attrs:{"model":_vm.model,"static":field.static || _vm.compact,"compact":_vm.compact,"size":field.size || _vm.size}},'item',field,false))})),_vm._v(" "),_c('div',{staticStyle:{"clear":"both"}}),_vm._v(" "),(_vm.text)?_c('div',{class:_vm.getClass(),staticStyle:{"white-space":"pre-line"}},[_c('big',[_vm._v(_vm._s(_vm.text))])],1):_vm._e(),_vm._v(" "),_c('div',{staticStyle:{"clear":"both"}})]):_vm._e(),_vm._v(" "),(_vm.buttons.length)?_c('div',{staticClass:"modal-footer"},_vm._l((_vm.buttons),function(b){return _c('button',{class:[
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"thumbnail"},[(_vm.onClose || _vm.label || _vm.icon)?_c('div',{staticClass:"modal-header"},[(_vm.onClose)?_c('button',{staticClass:"close",attrs:{"type":"button"},on:{"click":_vm.onClose}},[_c('icon',{staticClass:"glyphicon",attrs:{"name":"times"}})],1):_vm._e(),_vm._v(" "),(_vm.label || _vm.icon)?_c('h4',{staticClass:"modal-title",staticStyle:{"text-align":"center"}},[(_vm.icon)?_c('icon',{staticClass:"glyphicon",attrs:{"name":_vm.icon}}):_vm._e(),_vm._v(" "+_vm._s(_vm.label)+"\n    ")],1):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.Fields.length || _vm.text)?_c('div',{staticClass:"modal-body"},[_c('div',{staticStyle:{"clear":"both"}}),_vm._v(" "),_c('form',{staticClass:"form-horizontal",on:{"submit":function($event){$event.preventDefault();return _vm.submit($event)}}},_vm._l((_vm.Fields),function(field,index){return _c('item',_vm._b({key:index,attrs:{"model":_vm.model,"static":field.static || _vm.compact,"compact":_vm.compact,"size":field.size || _vm.size}},'item',field,false))})),_vm._v(" "),_c('div',{staticStyle:{"clear":"both"}}),_vm._v(" "),(_vm.text)?_c('div',{class:_vm.getClass(),staticStyle:{"white-space":"pre-line"}},[_c('big',[_vm._v(_vm._s(_vm.text))])],1):_vm._e(),_vm._v(" "),_c('div',{staticStyle:{"clear":"both"}})]):_vm._e(),_vm._v(" "),(_vm.buttons.length)?_c('div',{staticClass:"modal-footer"},_vm._l((_vm.buttons),function(b){return _c('button',{class:[
         'btn',
         'btn-' + b.type,
         b.block ? 'btn-block' : '',
@@ -24920,7 +25053,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-b774b1aa", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"./item.vue":93,"babel-runtime/core-js/object/keys":2,"libt":74,"vue":89,"vue-awesome":77,"vue-hot-reload-api":78}],93:[function(require,module,exports){
+},{"../lib.js":101,"./item.vue":93,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":89,"vue-awesome":77,"vue-hot-reload-api":78}],93:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -25081,7 +25214,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = {
   mixins: [_lib2.default],
   components: {
-    'tmx-form': _form2.default,
+    'v-form': _form2.default,
     'vue-over-body': _vueOverBody2.default
   },
   watch: {
@@ -25165,7 +25298,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('vue-over-body',{attrs:{"open":_vm.isOpen,"dialog-style":{'width': _vm.size + 'px'},"before":"before","after":"after"}},[_c('tmx-form',_vm._b({},'tmx-form',_vm.$root.$data.modal,false))],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('vue-over-body',{attrs:{"open":_vm.isOpen,"dialog-style":{'width': _vm.size + 'px'},"before":"before","after":"after"}},[_c('v-form',_vm._b({},'v-form',_vm.$root.$data.modal,false))],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25444,10 +25577,6 @@ var components = {};
 module.exports = {
   components: components,
   props: {
-    case: {
-      type: String,
-      default: ''
-    },
     component: {
       type: String,
       default: ''
@@ -25457,34 +25586,37 @@ module.exports = {
       default: function _default() {
         return {};
       }
-    },
-    isReady: {
-      type: Function
     }
   },
   data: function data() {
     return {
-      ready: false
+      ready: false,
+      form: null,
+      model: null,
+      fields: null
     };
   },
   methods: {
-    callback: function callback() {
-      this.$data.ready = true;
-      if (this.isReady) {
-        this.isReady();
-      }
+    submit: function submit(data) {
       if (this.component === 'modal') {
-        this.$root.$data.modal = _libt2.default.copy(this.tests);
+        this.$root.$data.modal = _libt2.default.copy(data);
+      } else {
+        this.$data.form = _libt2.default.copy(data);
       }
+      this.$data.ready = true;
     },
-    getProps: function getProps() {
-      var name = 'tmx-' + (this.component === 'modal' ? 'form' : this.component);
-      return this.$options.components[name].props;
+    build: function build() {
+      this.$data.ready = false;
+      this.$data.model = _libt2.default.copy(this.tests);
+      this.$data.fields = _libt2.default.copy(this.$options.components['tmx-' + (this.component === 'modal' ? 'form' : this.component)].props);
     }
+  },
+  mounted: function mounted() {
+    this.build();
   },
   watch: {
     component: function component() {
-      this.$data.ready = false;
+      this.build();
     }
   }
 };
@@ -25492,7 +25624,11 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.ready)?_c('div',[(_vm.component === 'form')?_c('tmx-form',_vm._b({},'tmx-form',_vm.tests,false)):_vm._e()],1):_vm._e(),_vm._v(" "),_c('tmx-playground',{attrs:{"model":_vm.tests,"name":_vm.component,"props":_vm.getProps(),"callback":_vm.callback}})],1)}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.ready)?_c('div',[(_vm.component === 'form')?_c('tmx-form',_vm._b({},'tmx-form',_vm.form,false)):_vm._e()],1):_vm._e(),_vm._v(" "),_c('tmx-form',{attrs:{"icon":"cog","label":'Live Playground '+_vm.component,"model":_vm.model,"fields":_vm.fields,"submit":_vm.submit,"buttons":[{
+      type: 'primary',
+      icon: 'cog',
+      label: 'Rebuild'
+    }]}})],1)}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

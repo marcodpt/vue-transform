@@ -1,12 +1,12 @@
 <script type="text/babel">
   import lib from '../lib.js'
-  import tmxForm from './form.vue'
+  import form from './form.vue'
   import overBody from 'vue-over-body'
 
   module.exports = {
     mixins: [lib],
     components: {
-      'tmx-form': tmxForm,
+      'v-form': form,
       'vue-over-body': overBody
     },
     watch: {
@@ -90,7 +90,7 @@
 
 <template>
   <vue-over-body :open="isOpen" :dialog-style="{'width': size + 'px'}" before="before" after="after">
-    <tmx-form v-bind="$root.$data.modal"/>
+    <v-form v-bind="$root.$data.modal"/>
   </vue-over-body>
 </template>
 

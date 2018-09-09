@@ -4,14 +4,12 @@
   import treeNav from 'vue-tree-nav'
   import tmxModal from './components/modal.vue'
   import tmxTests from './components/tests.vue'
-  import tmxPlayground from './components/playground.vue'
 
   import routes from './routes.js'
 
   Vue.use(VueRouter)
 
   Vue.component('tmx-tests', tmxTests)
-  Vue.component('tmx-playground', tmxPlayground)
   Vue.component('tmx-modal', tmxModal)
   Vue.component('vue-tree-nav', treeNav)
 
