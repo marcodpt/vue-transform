@@ -112,7 +112,7 @@
 
           this.$data.Fields.forEach(field => {
             if (field.format === 'boolean' && model[field.id] !== undefined) {
-              model[key] = model[key] ? true : false
+              model[field.id] = model[field.id] ? true : false
             } 
           })
           this.submit(model)

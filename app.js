@@ -24921,7 +24921,7 @@ module.exports = {
 
         this.$data.Fields.forEach(function (field) {
           if (field.format === 'boolean' && model[field.id] !== undefined) {
-            model[key] = model[key] ? true : false;
+            model[field.id] = model[field.id] ? true : false;
           }
         });
         this.submit(model);
@@ -25652,11 +25652,7 @@ module.exports={
     "integer",
     "number",
     "date",
-    "string",
-    "color",
-    "file",
-    "json",
-    "script"
+    "string"
   ],
   "Alert": [
     "success",
