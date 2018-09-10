@@ -1,5 +1,5 @@
 # vue-transform
-Vue json based form, modal with bootstrap3
+Vue json based form, modal with bootstrap3  
 [Live Demo](http://marcodpt.github.io/vue-transform)
  - display an object in a reasonable way
  - very quick form build
