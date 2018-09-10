@@ -53,6 +53,7 @@ Form usage
 Modal usage
 ```html
   <button @click="showModal">Show Modal</button>
+  <modal />
 ```
 
 Test your component usage
