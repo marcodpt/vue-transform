@@ -1,16 +1,11 @@
 <script type="text/babel">
   import T from 'libt'
-  import tmx from '../index.vue'
-
-  var components = {}
-  Object.keys(tmx).forEach(key => {
-    if (key !== 'lib') {
-      components[`tmx-${key}`] = tmx[key]
-    }
-  })
+  import {transform} from '../index.vue'
 
   module.exports = {
-    components: components,
+    components: {
+      transform: transform
+    },
     props: {
       component: {
         type: String,
@@ -44,7 +39,7 @@
         this.$data.ready = false
         this.$data.model = T.copy(this.tests)
         this.$data.fields = T.copy(this.$options.components[
-          'tmx-' + (this.component === 'modal' ? 'form' : this.component)
+          (this.component === 'modal' ? 'transform' : this.component)
         ].props)
       }
     },
@@ -62,9 +57,9 @@
 <template>
   <div>
     <div v-if="ready">
-      <tmx-form v-if="component === 'form'" v-bind="form" />
+      <transform v-if="component === 'transform'" v-bind="form" />
     </div>
-    <tmx-form
+    <transform
       icon="cog"
       :label="'Live Playground '+component"
       :model="model"
@@ -75,6 +70,6 @@
         icon: 'cog',
         label: 'Rebuild'
       }]"
-    ></tmx-form>
+    />
   </div>
 </template>

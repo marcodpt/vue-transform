@@ -2,15 +2,15 @@
   import Vue from '../node_modules/vue/dist/vue.js'
   import VueRouter from 'vue-router'
   import treeNav from 'vue-tree-nav'
-  import tmxModal from './components/modal.vue'
-  import tmxTests from './components/tests.vue'
+  import modal from './components/modal.vue'
+  import tests from './components/tests.vue'
 
   import routes from './routes.js'
 
   Vue.use(VueRouter)
 
-  Vue.component('tmx-tests', tmxTests)
-  Vue.component('tmx-modal', tmxModal)
+  Vue.component('tests', tests)
+  Vue.component('modal', modal)
   Vue.component('vue-tree-nav', treeNav)
 
   var setComponent = (routes) => {
@@ -36,7 +36,7 @@
       routes: routes,
       right: [
         {
-          href: "https://github.com/marcodpt/tmx",
+          href: "https://github.com/marcodpt/vue-transform",
           icon: "brands/github"
         }
       ],

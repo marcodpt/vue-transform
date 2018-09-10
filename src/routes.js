@@ -37,9 +37,9 @@ module.exports = [
     children: [
       {
         path: 'form',
-        component: 'tmx-tests',
+        component: 'tests',
         props: {
-          component: 'form',
+          component: 'transform',
           tests: {
             model: form.model,
             label: 'Test form'
@@ -47,7 +47,7 @@ module.exports = [
         }
       }, {
         path: 'modal',
-        component: 'tmx-tests',
+        component: 'tests',
         props: {
           component: 'modal',
           tests: {

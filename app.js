@@ -3377,12 +3377,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0bbf295a", __vue__options__)
+    hotAPI.createRecord("data-v-e7114e92", __vue__options__)
   } else {
-    hotAPI.reload("data-v-0bbf295a", __vue__options__)
+    hotAPI.reload("data-v-e7114e92", __vue__options__)
   }
 })()}
-},{"./select.vue":81,"babel-runtime/core-js/object/keys":2,"vue":89,"vue-hot-reload-api":78}],81:[function(require,module,exports){
+},{"./select.vue":81,"babel-runtime/core-js/object/keys":2,"vue":90,"vue-hot-reload-api":78}],81:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -3576,13 +3576,13 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-855e446a", __vue__options__)
+    hotAPI.createRecord("data-v-75d79ce7", __vue__options__)
   } else {
-    hotAPI.reload("data-v-855e446a", __vue__options__)
+    hotAPI.reload("data-v-75d79ce7", __vue__options__)
   }
 })()}
-},{"babel-runtime/helpers/typeof":5,"libt":79,"vue":89,"vue-hot-reload-api":78,"vue-select":84}],82:[function(require,module,exports){
-var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".over_body_mask {\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  position:fixed; \n  overflow-x: hidden;\n  overflow-y: auto;\n}\n\n.over_body_mask_after {\n  background-color:rgba(0, 0, 0, 0.5); \n}\n\n.over_body_dialog {\n  position:relative; \n}")
+},{"babel-runtime/helpers/typeof":5,"libt":79,"vue":90,"vue-hot-reload-api":78,"vue-select":84}],82:[function(require,module,exports){
+var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".over_body_open {\n  overflow: hidden;\n}\n\n.over_body_mask {\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  position:fixed; \n  overflow-x: hidden;\n  overflow-y: auto;\n}\n\n.over_body_mask_after {\n  background-color:rgba(0, 0, 0, 0.5); \n}\n\n.over_body_dialog {\n  position:relative; \n}")
 ;(function(){
 'use strict';
 
@@ -3623,7 +3623,9 @@ module.exports = {
     };
   },
   mounted: function mounted() {
-    this.toogle(this.open);
+    if (this.open) {
+      this.toogle(this.open);
+    }
   },
   watch: {
     open: function open() {
@@ -3639,6 +3641,7 @@ module.exports = {
 
       var t = 50;
       if (open) {
+        document.body.className += ' over_body_open';
         this.$data.start = true;
         setTimeout(function () {
           return _this.$data.finish = true;
@@ -3646,7 +3649,8 @@ module.exports = {
       } else {
         this.$data.finish = false;
         setTimeout(function () {
-          return _this.$data.start = false;
+          _this.$data.start = false;
+          document.body.className = document.body.className.replace(" over_body_open", "");
         }, this.transition * 1000 + t);
       }
     },
@@ -3677,12 +3681,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   module.hot.accept()
   module.hot.dispose(__vueify_style_dispose__)
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a64fb644", __vue__options__)
+    hotAPI.createRecord("data-v-05294942", __vue__options__)
   } else {
-    hotAPI.reload("data-v-a64fb644", __vue__options__)
+    hotAPI.reload("data-v-05294942", __vue__options__)
   }
 })()}
-},{"vue":89,"vue-hot-reload-api":78,"vueify/lib/insert-css":90}],83:[function(require,module,exports){
+},{"vue":90,"vue-hot-reload-api":78,"vueify/lib/insert-css":91}],83:[function(require,module,exports){
 (function (process){
 /**
   * vue-router v3.0.1
@@ -6316,6 +6320,107 @@ module.exports = VueRouter;
 e.target.composing||(t.search=e.target.value)}}}),t._v(" "),n("button",{directives:[{name:"show",rawName:"v-show",value:t.showClearButton,expression:"showClearButton"}],staticClass:"clear",attrs:{disabled:t.disabled,type:"button",title:"Clear selection"},on:{click:t.clearSelection}},[n("span",{attrs:{"aria-hidden":"true"}},[t._v("×")])]),t._v(" "),t.noDrop?t._e():n("i",{ref:"openIndicator",staticClass:"open-indicator",attrs:{role:"presentation"}}),t._v(" "),t._t("spinner",[n("div",{directives:[{name:"show",rawName:"v-show",value:t.mutableLoading,expression:"mutableLoading"}],staticClass:"spinner"},[t._v("Loading...")])])],2),t._v(" "),n("transition",{attrs:{name:t.transition}},[t.dropdownOpen?n("ul",{ref:"dropdownMenu",staticClass:"dropdown-menu",style:{"max-height":t.maxHeight}},[t._l(t.filteredOptions,function(e,r){return n("li",{key:r,class:{active:t.isOptionSelected(e),highlight:r===t.typeAheadPointer},on:{mouseover:function(e){t.typeAheadPointer=r}}},[n("a",{on:{mousedown:function(n){n.preventDefault(),t.select(e)}}},[t._t("option",[t._v("\n          "+t._s(t.getOptionLabel(e))+"\n        ")],null,e)],2)])}),t._v(" "),t.filteredOptions.length?t._e():n("li",{staticClass:"no-options"},[t._t("no-options",[t._v("Sorry, no matching options.")])],2)],2):t._e()])],1)},staticRenderFns:[]}},function(t,e,n){function r(t,e){for(var n=0;n<t.length;n++){var r=t[n],o=f[r.id];if(o){o.refs++;for(var i=0;i<o.parts.length;i++)o.parts[i](r.parts[i]);for(;i<r.parts.length;i++)o.parts.push(u(r.parts[i],e))}else{for(var a=[],i=0;i<r.parts.length;i++)a.push(u(r.parts[i],e));f[r.id]={id:r.id,refs:1,parts:a}}}}function o(t){for(var e=[],n={},r=0;r<t.length;r++){var o=t[r],i=o[0],a=o[1],s=o[2],u=o[3],l={css:a,media:s,sourceMap:u};n[i]?n[i].parts.push(l):e.push(n[i]={id:i,parts:[l]})}return e}function i(t,e){var n=h(),r=g[g.length-1];if("top"===t.insertAt)r?r.nextSibling?n.insertBefore(e,r.nextSibling):n.appendChild(e):n.insertBefore(e,n.firstChild),g.push(e);else{if("bottom"!==t.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");n.appendChild(e)}}function a(t){t.parentNode.removeChild(t);var e=g.indexOf(t);e>=0&&g.splice(e,1)}function s(t){var e=document.createElement("style");return e.type="text/css",i(t,e),e}function u(t,e){var n,r,o;if(e.singleton){var i=v++;n=b||(b=s(e)),r=l.bind(null,n,i,!1),o=l.bind(null,n,i,!0)}else n=s(e),r=c.bind(null,n),o=function(){a(n)};return r(t),function(e){if(e){if(e.css===t.css&&e.media===t.media&&e.sourceMap===t.sourceMap)return;r(t=e)}else o()}}function l(t,e,n,r){var o=n?"":r.css;if(t.styleSheet)t.styleSheet.cssText=y(e,o);else{var i=document.createTextNode(o),a=t.childNodes;a[e]&&t.removeChild(a[e]),a.length?t.insertBefore(i,a[e]):t.appendChild(i)}}function c(t,e){var n=e.css,r=e.media,o=e.sourceMap;if(r&&t.setAttribute("media",r),o&&(n+="\n/*# sourceURL="+o.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(o))))+" */"),t.styleSheet)t.styleSheet.cssText=n;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(n))}}var f={},p=function(t){var e;return function(){return"undefined"==typeof e&&(e=t.apply(this,arguments)),e}},d=p(function(){return/msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())}),h=p(function(){return document.head||document.getElementsByTagName("head")[0]}),b=null,v=0,g=[];t.exports=function(t,e){e=e||{},"undefined"==typeof e.singleton&&(e.singleton=d()),"undefined"==typeof e.insertAt&&(e.insertAt="bottom");var n=o(t);return r(n,e),function(t){for(var i=[],a=0;a<n.length;a++){var s=n[a],u=f[s.id];u.refs--,i.push(u)}if(t){var l=o(t);r(l,e)}for(var a=0;a<i.length;a++){var u=i[a];if(0===u.refs){for(var c=0;c<u.parts.length;c++)u.parts[c]();delete f[u.id]}}}};var y=function(){var t=[];return function(e,n){return t[e]=n,t.filter(Boolean).join("\n")}}()},function(t,e,n){var r=n(81);"string"==typeof r&&(r=[[t.id,r,""]]);n(86)(r,{});r.locals&&(t.exports=r.locals)}])});
 
 },{}],85:[function(require,module,exports){
+var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".over_body_mask {\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  position:fixed; \n  overflow-x: hidden;\n  overflow-y: auto;\n}\n\n.over_body_mask_after {\n  background-color:rgba(0, 0, 0, 0.5); \n}\n\n.over_body_dialog {\n  position:relative; \n}")
+;(function(){
+'use strict';
+
+module.exports = {
+  name: 'vue-over-body',
+  props: {
+    open: {
+      type: Number,
+      default: 0
+    },
+    transition: {
+      type: Number,
+      default: 0.3
+    },
+    dialogStyle: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    before: {
+      type: String,
+      default: ''
+    },
+    after: {
+      type: String,
+      default: ''
+    },
+    dim: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data: function data() {
+    return {
+      start: false,
+      finish: false
+    };
+  },
+  mounted: function mounted() {
+    this.toogle(this.open);
+  },
+  watch: {
+    open: function open() {
+      this.toogle(this.open);
+    }
+  },
+  methods: {
+    close: function close() {
+      this.toogle(false);
+    },
+    toogle: function toogle(open) {
+      var _this = this;
+
+      var t = 50;
+      if (open) {
+        this.$data.start = true;
+        setTimeout(function () {
+          return _this.$data.finish = true;
+        }, t);
+      } else {
+        this.$data.finish = false;
+        setTimeout(function () {
+          return _this.$data.start = false;
+        }, this.transition * 1000 + t);
+      }
+    },
+    setStyle: function setStyle(obj) {
+      if (obj == null) {
+        obj = {};
+      }
+
+      obj['z-index'] = this.open;
+      obj['-webkit-transition'] = 'all ' + this.transition + 's';
+      obj['-moz-transition'] = 'all ' + this.transition + 's';
+      obj['-o-transition'] = 'all ' + this.transition + 's';
+      obj['transition'] = 'all ' + this.transition + 's';
+
+      return obj;
+    }
+  }
+};
+})()
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.start)?_c('div',{class:['over_body_mask', _vm.finish && _vm.dim ? 'over_body_mask_after' : ''],style:(_vm.setStyle()),on:{"click":_vm.close}},[_c('div',{class:['over_body_dialog', _vm.before, _vm.finish ? _vm.after : ''],style:(_vm.setStyle(_vm.dialogStyle)),on:{"click":function($event){$event.stopPropagation();}}},[_vm._t("default")],2)]):_vm._e()}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  module.hot.dispose(__vueify_style_dispose__)
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3d205631", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-3d205631", __vue__options__)
+  }
+})()}
+},{"vue":90,"vue-hot-reload-api":78,"vueify/lib/insert-css":91}],86:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".tree_nav_bar {\n   margin-bottom:20px;\n}\n\n.tree_nav_bar ul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n  overflow: hidden;\n}\n\n.tree_nav_before {\n  height: 100%;\n  top: 0;\n  left: -300px;\n}\n\n.tree_nav_after {\n  left: 0;\n}")
 ;(function(){
 'use strict';
@@ -6494,12 +6599,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   module.hot.accept()
   module.hot.dispose(__vueify_style_dispose__)
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-103505aa", __vue__options__)
+    hotAPI.createRecord("data-v-0ce404e2", __vue__options__)
   } else {
-    hotAPI.reload("data-v-103505aa", __vue__options__)
+    hotAPI.reload("data-v-0ce404e2", __vue__options__)
   }
 })()}
-},{"./item.vue":86,"babel-runtime/core-js/object/keys":2,"vue":89,"vue-hot-reload-api":78,"vue-over-body":82,"vueify/lib/insert-css":90}],86:[function(require,module,exports){
+},{"./item.vue":87,"babel-runtime/core-js/object/keys":2,"vue":90,"vue-hot-reload-api":78,"vue-over-body":85,"vueify/lib/insert-css":91}],87:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".tree_nav_item a {\n  text-decoration: none;\n  padding: 14px 16px;\n  transition: 0.3s;\n  display:block;\n}\n\n.tree_nav_item a:hover {\n  text-decoration: none;\n  cursor: pointer;\n}")
 ;(function(){
 'use strict';
@@ -6613,12 +6718,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   module.hot.accept()
   module.hot.dispose(__vueify_style_dispose__)
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-939e47aa", __vue__options__)
+    hotAPI.createRecord("data-v-2ccf2f72", __vue__options__)
   } else {
-    hotAPI.reload("data-v-939e47aa", __vue__options__)
+    hotAPI.reload("data-v-2ccf2f72", __vue__options__)
   }
 })()}
-},{"vue":89,"vue-awesome":77,"vue-hot-reload-api":78,"vueify/lib/insert-css":90}],87:[function(require,module,exports){
+},{"vue":90,"vue-awesome":77,"vue-hot-reload-api":78,"vueify/lib/insert-css":91}],88:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -6637,12 +6742,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6610df5e", __vue__options__)
+    hotAPI.createRecord("data-v-f5036126", __vue__options__)
   } else {
-    hotAPI.reload("data-v-6610df5e", __vue__options__)
+    hotAPI.reload("data-v-f5036126", __vue__options__)
   }
 })()}
-},{"./components/bar.vue":85,"vue":89,"vue-hot-reload-api":78}],88:[function(require,module,exports){
+},{"./components/bar.vue":86,"vue":90,"vue-hot-reload-api":78}],89:[function(require,module,exports){
 (function (global,setImmediate){
 /*!
  * Vue.js v2.5.17
@@ -16532,7 +16637,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"timers":76}],89:[function(require,module,exports){
+},{"timers":76}],90:[function(require,module,exports){
 (function (process,global,setImmediate){
 /*!
  * Vue.js v2.5.17
@@ -24570,7 +24675,7 @@ if (inBrowser) {
 module.exports = Vue;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":75,"timers":76}],90:[function(require,module,exports){
+},{"_process":75,"timers":76}],91:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 function noop () {}
@@ -24595,7 +24700,7 @@ exports.insert = function (css) {
   }
 }
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -24619,10 +24724,6 @@ var _tests = require('./components/tests.vue');
 
 var _tests2 = _interopRequireDefault(_tests);
 
-var _playground = require('./components/playground.vue');
-
-var _playground2 = _interopRequireDefault(_playground);
-
 var _routes = require('./routes.js');
 
 var _routes2 = _interopRequireDefault(_routes);
@@ -24631,9 +24732,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _vue2.default.use(_vueRouter2.default);
 
-_vue2.default.component('tmx-tests', _tests2.default);
-_vue2.default.component('tmx-playground', _playground2.default);
-_vue2.default.component('tmx-modal', _modal2.default);
+_vue2.default.component('tests', _tests2.default);
+_vue2.default.component('modal', _modal2.default);
 _vue2.default.component('vue-tree-nav', _vueTreeNav2.default);
 
 var setComponent = function setComponent(routes) {
@@ -24658,7 +24758,7 @@ new _vue2.default({
   data: {
     routes: _routes2.default,
     right: [{
-      href: "https://github.com/marcodpt/tmx",
+      href: "https://github.com/marcodpt/vue-transform",
       icon: "brands/github"
     }],
     modal: null
@@ -24672,12 +24772,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1b94682f", __vue__options__)
+    hotAPI.createRecord("data-v-6fd9a94b", __vue__options__)
   } else {
-    hotAPI.reload("data-v-1b94682f", __vue__options__)
+    hotAPI.reload("data-v-6fd9a94b", __vue__options__)
   }
 })()}
-},{"../node_modules/vue/dist/vue.js":88,"./components/modal.vue":94,"./components/playground.vue":95,"./components/tests.vue":96,"./routes.js":102,"vue":89,"vue-hot-reload-api":78,"vue-router":83,"vue-tree-nav":87}],92:[function(require,module,exports){
+},{"../node_modules/vue/dist/vue.js":89,"./components/modal.vue":95,"./components/tests.vue":96,"./routes.js":102,"vue":90,"vue-hot-reload-api":78,"vue-router":83,"vue-tree-nav":88}],93:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -25048,12 +25148,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b774b1aa", __vue__options__)
+    hotAPI.createRecord("data-v-14061e47", __vue__options__)
   } else {
-    hotAPI.reload("data-v-b774b1aa", __vue__options__)
+    hotAPI.reload("data-v-14061e47", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"./item.vue":93,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":89,"vue-awesome":77,"vue-hot-reload-api":78}],93:[function(require,module,exports){
+},{"../lib.js":101,"./item.vue":94,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":90,"vue-awesome":77,"vue-hot-reload-api":78}],94:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -25183,12 +25283,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-638d540c", __vue__options__)
+    hotAPI.createRecord("data-v-3df9cd16", __vue__options__)
   } else {
-    hotAPI.reload("data-v-638d540c", __vue__options__)
+    hotAPI.reload("data-v-3df9cd16", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"libt":74,"vue":89,"vue-hot-reload-api":78,"vue-inputag":80}],94:[function(require,module,exports){
+},{"../lib.js":101,"libt":74,"vue":90,"vue-hot-reload-api":78,"vue-inputag":80}],95:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".before {\n  opacity: 0;\n  top: -100px;\n  max-width: 90%;\n  margin: 30px auto;\n}\n.after {\n  top: 0;\n  opacity: 1;\n}")
 ;(function(){
 'use strict';
@@ -25306,256 +25406,14 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   module.hot.accept()
   module.hot.dispose(__vueify_style_dispose__)
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-06f44254", __vue__options__)
+    hotAPI.createRecord("data-v-f657698c", __vue__options__)
   } else {
-    hotAPI.reload("data-v-06f44254", __vue__options__)
+    hotAPI.reload("data-v-f657698c", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"./form.vue":92,"babel-runtime/core-js/object/keys":2,"vue":89,"vue-hot-reload-api":78,"vue-over-body":82,"vueify/lib/insert-css":90}],95:[function(require,module,exports){
+},{"../lib.js":101,"./form.vue":93,"babel-runtime/core-js/object/keys":2,"vue":90,"vue-hot-reload-api":78,"vue-over-body":82,"vueify/lib/insert-css":91}],96:[function(require,module,exports){
 ;(function(){
 'use strict';
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-var _typeof2 = require('babel-runtime/helpers/typeof');
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _libt = require('libt');
-
-var _libt2 = _interopRequireDefault(_libt);
-
-var _form = require('./form.vue');
-
-var _form2 = _interopRequireDefault(_form);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  components: {
-    'tmx-form': _form2.default
-  },
-  props: {
-    model: {
-      type: Object,
-      default: function _default() {
-        return {};
-      }
-    },
-    props: {
-      type: Object,
-      default: function _default() {
-        return {};
-      }
-    },
-    name: {
-      type: String,
-      default: ''
-    },
-    callback: {
-      type: Function,
-      required: true
-    }
-  },
-  data: function data() {
-    var data = {
-      form: {
-        model: {},
-        fields: []
-      },
-      compile: []
-    };
-
-    return data;
-  },
-  mounted: function mounted() {
-    this.build();
-  },
-  methods: {
-    build: function build() {
-      var _this = this;
-
-      var fields = [{
-        id: 'style',
-        format: 'string'
-      }, {
-        id: 'class',
-        format: 'string'
-      }];
-      var model = {};
-
-      this.$data.compile = [];
-      (0, _keys2.default)(this.props).forEach(function (key) {
-        var prop = _this.props[key];
-        if (prop.default !== undefined) {
-          if (typeof prop.default === 'function' && prop.type !== Function) {
-            model[key] = prop.default();
-          } else {
-            model[key] = prop.default;
-          }
-        }
-
-        var type = _this.getTypes(prop.type);
-
-        var format = 'string';
-        if (type === 'Boolean') {
-          format = 'boolean';
-        } else if (type === 'Number') {
-          format = 'number';
-        } else if (type === 'Array' || type === 'Object' || type === 'Function') {
-          format = 'string:text';
-          _this.$data.compile.push(key);
-        }
-
-        fields.push({
-          id: key,
-          label: key + ' (' + type + ')',
-          format: format,
-          options: _this.getOptions(key === 'icon' ? _this.isIcon : prop.validator),
-          required: prop.required
-        });
-      });
-
-      model = _libt2.default.merge(model)(this.model);
-      var F = [];
-      model = _libt2.default.iterate(function (value) {
-        if (typeof value === 'function') {
-          F.push(String(value));
-          return '&&F:' + (F.length - 1);
-        } else {
-          return value;
-        }
-      })(model);
-      (0, _keys2.default)(model).forEach(function (key) {
-        if ((0, _typeof3.default)(model[key]) === 'object' && model[key] != null) {
-          model[key] = (0, _stringify2.default)(model[key], undefined, 2);
-          F.forEach(function (f, i) {
-            model[key] = _libt2.default.replaceAll('"&&F:' + i + '"', f)(model[key]);
-          });
-        } else if (typeof model[key] === 'string' && model[key].substr(0, 4) === '&&F:') {
-          F.forEach(function (f, i) {
-            model[key] = model[key] === '&&F:' + i ? f : model[key];
-          });
-        }
-      });
-
-      _libt2.default.sync(this.$data.form.model, model, this.$set);
-      _libt2.default.sync(this.$data.form.fields, fields);
-      this.submit();
-    },
-    submit: function submit() {
-      var _this2 = this;
-
-      var model = _libt2.default.copy(this.$data.form.model);
-      this.$data.compile.forEach(function (key) {
-        if (model[key] !== '') {
-          try {
-            eval('model[key] = ' + model[key]);
-          } catch (err) {
-            _libt2.default.debug('Eval error', key, model[key], err.toString());
-            model[key] = undefined;
-          }
-        } else {
-          model[key] = undefined;
-        }
-      });
-
-      var model2 = _libt2.default.copy(model);
-      (0, _keys2.default)(this.props).forEach(function (key) {
-        if (_this2.props[key].type === Boolean && model[key] !== undefined) {
-          model2[key] = model[key] ? true : false;
-        }
-      });
-      _libt2.default.sync(this.model, model2, this.$set);
-      this.callback();
-    },
-    getType: function getType(type) {
-      var ret = '';
-      if (type === String) {
-        ret = 'String';
-      } else if (type === Number) {
-        ret = 'Number';
-      } else if (type === Boolean) {
-        ret = 'Boolean';
-      } else if (type === Object) {
-        ret = 'Object';
-      } else if (type === Array) {
-        ret = 'Array';
-      } else if (type === Function) {
-        ret = 'Function';
-      } else {
-        ret = 'Object';
-      }
-
-      return ret;
-    },
-    getTypes: function getTypes(types) {
-      var _this3 = this;
-
-      if (types instanceof Array) {
-        var str = '';
-        types.forEach(function (type) {
-          if (str.length) {
-            str += ', ';
-          }
-          str += _this3.getType(type);
-        });
-        return this.getType(types[0]);
-      } else {
-        return this.getType(types);
-      }
-    },
-    getOptions: function getOptions(validator) {
-      if (validator) {
-        var options = validator(_libt2.default.identity);
-        if (options instanceof Array) {
-          return options;
-        }
-      }
-    }
-  },
-  watch: {
-    name: function name() {
-      this.build();
-    },
-    props: function props() {
-      this.build();
-    }
-  }
-};
-})()
-if (module.exports.__esModule) module.exports = module.exports.default
-var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
-if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tmx-form',_vm._b({attrs:{"submit":_vm.submit,"icon":"cog","label":'Live Playground '+_vm.name,"buttons":[{
-    type: 'primary',
-    icon: 'cog',
-    label: 'Rebuild'
-  }]}},'tmx-form',_vm.form,false))}
-__vue__options__.staticRenderFns = []
-if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3ad0c53c", __vue__options__)
-  } else {
-    hotAPI.reload("data-v-3ad0c53c", __vue__options__)
-  }
-})()}
-},{"./form.vue":92,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":89,"vue-hot-reload-api":78}],96:[function(require,module,exports){
-;(function(){
-'use strict';
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
 
 var _libt = require('libt');
 
@@ -25563,19 +25421,12 @@ var _libt2 = _interopRequireDefault(_libt);
 
 var _index = require('../index.vue');
 
-var _index2 = _interopRequireDefault(_index);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var components = {};
-(0, _keys2.default)(_index2.default).forEach(function (key) {
-  if (key !== 'lib') {
-    components['tmx-' + key] = _index2.default[key];
-  }
-});
-
 module.exports = {
-  components: components,
+  components: {
+    transform: _index.transform
+  },
   props: {
     component: {
       type: String,
@@ -25608,7 +25459,7 @@ module.exports = {
     build: function build() {
       this.$data.ready = false;
       this.$data.model = _libt2.default.copy(this.tests);
-      this.$data.fields = _libt2.default.copy(this.$options.components['tmx-' + (this.component === 'modal' ? 'form' : this.component)].props);
+      this.$data.fields = _libt2.default.copy(this.$options.components[this.component === 'modal' ? 'transform' : this.component].props);
     }
   },
   mounted: function mounted() {
@@ -25624,7 +25475,7 @@ module.exports = {
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.ready)?_c('div',[(_vm.component === 'form')?_c('tmx-form',_vm._b({},'tmx-form',_vm.form,false)):_vm._e()],1):_vm._e(),_vm._v(" "),_c('tmx-form',{attrs:{"icon":"cog","label":'Live Playground '+_vm.component,"model":_vm.model,"fields":_vm.fields,"submit":_vm.submit,"buttons":[{
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.ready)?_c('div',[(_vm.component === 'transform')?_c('transform',_vm._b({},'transform',_vm.form,false)):_vm._e()],1):_vm._e(),_vm._v(" "),_c('transform',{attrs:{"icon":"cog","label":'Live Playground '+_vm.component,"model":_vm.model,"fields":_vm.fields,"submit":_vm.submit,"buttons":[{
       type: 'primary',
       icon: 'cog',
       label: 'Rebuild'
@@ -25635,22 +25486,18 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-35e5584a", __vue__options__)
+    hotAPI.createRecord("data-v-839876a4", __vue__options__)
   } else {
-    hotAPI.reload("data-v-35e5584a", __vue__options__)
+    hotAPI.reload("data-v-839876a4", __vue__options__)
   }
 })()}
-},{"../index.vue":97,"babel-runtime/core-js/object/keys":2,"libt":74,"vue":89,"vue-hot-reload-api":78}],97:[function(require,module,exports){
+},{"../index.vue":97,"libt":74,"vue":90,"vue-hot-reload-api":78}],97:[function(require,module,exports){
 ;(function(){
 'use strict';
 
 var _form = require('./components/form.vue');
 
 var _form2 = _interopRequireDefault(_form);
-
-var _item = require('./components/item.vue');
-
-var _item2 = _interopRequireDefault(_item);
 
 var _modal = require('./components/modal.vue');
 
@@ -25659,8 +25506,7 @@ var _modal2 = _interopRequireDefault(_modal);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-  form: _form2.default,
-  item: _item2.default,
+  transform: _form2.default,
   modal: _modal2.default
 };
 })()
@@ -25671,12 +25517,12 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3d8830e0", __vue__options__)
+    hotAPI.createRecord("data-v-d4fcca08", __vue__options__)
   } else {
-    hotAPI.reload("data-v-3d8830e0", __vue__options__)
+    hotAPI.reload("data-v-d4fcca08", __vue__options__)
   }
 })()}
-},{"./components/form.vue":92,"./components/item.vue":93,"./components/modal.vue":94,"vue":89,"vue-hot-reload-api":78}],98:[function(require,module,exports){
+},{"./components/form.vue":93,"./components/modal.vue":95,"vue":90,"vue-hot-reload-api":78}],98:[function(require,module,exports){
 module.exports={
   "model": {
     "value": 5,
@@ -26633,9 +26479,9 @@ module.exports = [{
   },
   children: [{
     path: 'form',
-    component: 'tmx-tests',
+    component: 'tests',
     props: {
-      component: 'form',
+      component: 'transform',
       tests: {
         model: form.model,
         label: 'Test form'
@@ -26643,7 +26489,7 @@ module.exports = [{
     }
   }, {
     path: 'modal',
-    component: 'tmx-tests',
+    component: 'tests',
     props: {
       component: 'modal',
       tests: {
@@ -26661,4 +26507,4 @@ module.exports = [{
   redirect: '/components/form'
 }];
 
-},{"./json/form.json":98,"./json/validate.json":100}]},{},[91]);
+},{"./json/form.json":98,"./json/validate.json":100}]},{},[92]);
