@@ -22,18 +22,16 @@ npm install --save vue-transform
       transform: transform,
       modal: modal
     },
-    data: function () {
-      return {
-        "form": {
-          "value": 5,
-          "info": "Test",
-          "date": "2018-04-01"
-        },
-        "modal": {
-          "text": "Some message for user"
-        },
-        "test": {}
-      }
+    data: {
+      "form": {
+        "value": 5,
+        "info": "Test",
+        "date": "2018-04-01"
+      },
+      "modal": {
+        "text": "Some message for user"
+      },
+      "test": {}
     },
     methods: {
       showModal: function () {

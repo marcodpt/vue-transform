@@ -10,7 +10,7 @@ Object.keys(validate).forEach(function (key) {
 })
 
 _.translate = function (field) {
-  return lang['en'][field]
+  return lang[this.$root.$data.lang || 'en'][field]
 }
 
 module.exports = {
