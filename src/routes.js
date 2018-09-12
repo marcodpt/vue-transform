@@ -56,7 +56,17 @@ module.exports = [
             submit: function () {
               console.log('submited')
               console.log(this.model)
-            }
+            },
+            buttons: [
+              {
+                type: 'primary',
+                label: 'submit'
+              }, {
+                type: 'danger',
+                label: 'close',
+                click: 'hide'
+              }
+            ]
           }
         }
       }

@@ -1,10 +1,9 @@
 <script type="text/babel">
   import T from 'libt'
-  import lib from '../lib.js'
+  import validate from '../json/validate.json'
   import inputag from 'vue-inputag'
 
   module.exports = {
-    mixins: [lib],
     components: {
       'vue-inputag': inputag
     },
@@ -24,7 +23,8 @@
         type: String,
         default: 'string',
         validator: function (value) {
-          return !value || lib.methods.isType(value.split(':')[0])
+          value = value.split ? value.split(':')[0] : value
+          return !value || T.contains(validate.Type)(value)
         }
       },
       label: {
@@ -37,7 +37,7 @@
       size: {
         type: String,
         default: 'md',
-        validator: lib.methods.isSize
+        validator: T.contains(validate.Size)
       },
       compact: {
         type: Boolean,
@@ -49,10 +49,10 @@
         return this.format === 'boolean' ? [
           {
             id: 0,
-            label: this.translate('falseLabel')
+            label: 'Não'
           }, {
             id: 1,
-            label: this.translate('trueLabel')
+            label: 'Sim'
           }
         ] : this.$attrs.options
       },
@@ -91,11 +91,6 @@
         } else {
           return ''
         }
-      },
-      getFormatter: function () {
-        return x => {
-          return T.format(x, this.format, this.translate)
-        }
       }
     }
   }
@@ -120,7 +115,6 @@
       <vue-inputag
         v-if="!static"
         v-bind="$attrs"
-        :formatter="getFormatter()"
         :class="getClass()"
         :options="getOptions()"
         :type="getType()"
@@ -128,7 +122,6 @@
       <p v-else class="form-control-static">
         <vue-inputag
           v-bind="$attrs"
-          :formatter="getFormatter()"
           :options="getOptions()"
           :type="getType()"
         />

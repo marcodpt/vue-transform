@@ -24777,7 +24777,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-6fd9a94b", __vue__options__)
   }
 })()}
-},{"../node_modules/vue/dist/vue.js":89,"./components/modal.vue":95,"./components/tests.vue":96,"./routes.js":102,"vue":90,"vue-hot-reload-api":78,"vue-router":83,"vue-tree-nav":88}],93:[function(require,module,exports){
+},{"../node_modules/vue/dist/vue.js":89,"./components/modal.vue":95,"./components/tests.vue":96,"./routes.js":100,"vue":90,"vue-hot-reload-api":78,"vue-router":83,"vue-tree-nav":88}],93:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -24797,9 +24797,9 @@ var _libt = require('libt');
 
 var _libt2 = _interopRequireDefault(_libt);
 
-var _lib = require('../lib.js');
+var _validate = require('../json/validate.json');
 
-var _lib2 = _interopRequireDefault(_lib);
+var _validate2 = _interopRequireDefault(_validate);
 
 var _vueAwesome = require('vue-awesome');
 
@@ -24812,10 +24812,9 @@ var _item2 = _interopRequireDefault(_item);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-  mixins: [_lib2.default],
   components: {
-    'icon': _vueAwesome2.default,
-    'item': _item2.default
+    icon: _vueAwesome2.default,
+    item: _item2.default
   },
   props: {
     model: {
@@ -24839,12 +24838,12 @@ module.exports = {
     size: {
       type: String,
       default: 'md',
-      validator: _lib2.default.methods.isSize
+      validator: _libt2.default.contains(_validate2.default.Size)
     },
     icon: {
       type: String,
       default: '',
-      validator: _lib2.default.methods.isIcon
+      validator: _libt2.default.contains(_validate2.default.Icon)
     },
     label: {
       type: String,
@@ -24853,7 +24852,7 @@ module.exports = {
     alert: {
       type: String,
       default: 'danger',
-      validator: _lib2.default.methods.isAlert
+      validator: _libt2.default.contains(_validate2.default.Alert)
     },
     text: {
       type: String,
@@ -25083,38 +25082,9 @@ module.exports = {
         if (!error && empty && field.required) {
           if (field.format.substr(0, 6) === 'string' && !field.options && !field.src) {
             _this3.$set(_this3.model, field.id, '');
-          } else {
-            var err = _this3.translate('required');
-            _this3.$set(_this3.fields[i], 'error', label + ' ' + err);
-            valid = false;
-            error = true;
           }
         }
-        if (!error && !empty && field.min > _this3.model[field.id]) {
-          var err = _libt2.default.replaceAll('{$}', _libt2.default.format(field.min, field.format, _this3.translate))(_this3.translate('min'));
-          _this3.$set(_this3.fields[i], 'error', label + ' ' + err);
-          valid = false;
-          error = true;
-        }
-        if (!error && !empty && field.max < _this3.model[field.id]) {
-          var err = _libt2.default.replaceAll('{$}', _libt2.default.format(field.max, field.format, _this3.translate))(_this3.translate('max'));
-          _this3.$set(_this3.fields[i], 'error', label + ' ' + err);
-          valid = false;
-          error = true;
-        }
-        if (!error && !empty && field.minLen > String(_this3.model[field.id]).length) {
-          var err = _libt2.default.replaceAll('{$}', field.minLen)(_this3.translate('minLen'));
-          _this3.$set(_this3.fields[i], 'error', label + ' ' + err);
-          valid = false;
-          error = true;
-        }
-        if (!error && !empty && field.maxLen < String(_this3.model[field.id]).length) {
-          var err = _libt2.default.replaceAll('{$}', field.maxLen)(_this3.translate('maxLen'));
-          _this3.$set(_this3.fields[i], 'error', label + ' ' + err);
-          valid = false;
-          error = true;
-        }
-        if (!error && !empty && field.validate instanceof Array) {
+        if (!error && field.validate instanceof Array) {
           field.validate.forEach(function (v) {
             if (!error && !_libt2.default.evaluate(v.assert)(_this3.model)) {
               _this3.$set(_this3.fields[i], 'error', label + ' ' + v.error);
@@ -25153,7 +25123,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-14061e47", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"./item.vue":94,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":90,"vue-awesome":77,"vue-hot-reload-api":78}],94:[function(require,module,exports){
+},{"../json/validate.json":99,"./item.vue":94,"babel-runtime/core-js/json/stringify":1,"babel-runtime/core-js/object/keys":2,"babel-runtime/helpers/typeof":5,"libt":74,"vue":90,"vue-awesome":77,"vue-hot-reload-api":78}],94:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -25161,9 +25131,9 @@ var _libt = require('libt');
 
 var _libt2 = _interopRequireDefault(_libt);
 
-var _lib = require('../lib.js');
+var _validate = require('../json/validate.json');
 
-var _lib2 = _interopRequireDefault(_lib);
+var _validate2 = _interopRequireDefault(_validate);
 
 var _vueInputag = require('vue-inputag');
 
@@ -25172,7 +25142,6 @@ var _vueInputag2 = _interopRequireDefault(_vueInputag);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-  mixins: [_lib2.default],
   components: {
     'vue-inputag': _vueInputag2.default
   },
@@ -25192,7 +25161,8 @@ module.exports = {
       type: String,
       default: 'string',
       validator: function validator(value) {
-        return !value || _lib2.default.methods.isType(value.split(':')[0]);
+        value = value.split ? value.split(':')[0] : value;
+        return !value || _libt2.default.contains(_validate2.default.Type)(value);
       }
     },
     label: {
@@ -25205,7 +25175,7 @@ module.exports = {
     size: {
       type: String,
       default: 'md',
-      validator: _lib2.default.methods.isSize
+      validator: _libt2.default.contains(_validate2.default.Size)
     },
     compact: {
       type: Boolean,
@@ -25216,10 +25186,10 @@ module.exports = {
     getOptions: function getOptions() {
       return this.format === 'boolean' ? [{
         id: 0,
-        label: this.translate('falseLabel')
+        label: 'Não'
       }, {
         id: 1,
-        label: this.translate('trueLabel')
+        label: 'Sim'
       }] : this.$attrs.options;
     },
     getType: function getType() {
@@ -25257,13 +25227,6 @@ module.exports = {
       } else {
         return '';
       }
-    },
-    getFormatter: function getFormatter() {
-      var _this = this;
-
-      return function (x) {
-        return _libt2.default.format(x, _this.format, _this.translate);
-      };
     }
   }
 };
@@ -25276,7 +25239,7 @@ __vue__options__.render = function render () {var _vm=this;var _h=_vm.$createEle
     'form-group-' + _vm.size,
     _vm.error ? 'has-error': '', 
     _vm.col > 0 ? ('col-xs-' + Math.floor(12 / _vm.col)) : ''
-  ]},[(_vm.label !== '' && _vm.col)?_c('label',{class:['control-label', 'col-xs-' + (2 * _vm.col)]},[_vm._v("\n    "+_vm._s(_vm.label || _vm.$attrs.id)+":\n  ")]):_vm._e(),_vm._v(" "),_c('div',{class:['col-xs-' + (12 - (_vm.label !== '' ? 2 * _vm.col : 0))]},[(!_vm.static)?_c('vue-inputag',_vm._b({class:_vm.getClass(),attrs:{"formatter":_vm.getFormatter(),"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false)):_c('p',{staticClass:"form-control-static"},[_c('vue-inputag',_vm._b({attrs:{"formatter":_vm.getFormatter(),"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false))],1),_vm._v(" "),(_vm.error)?_c('span',{staticClass:"help-block"},[_vm._v("\n      "+_vm._s(_vm.error)+"\n    ")]):_vm._e()],1)])}
+  ]},[(_vm.label !== '' && _vm.col)?_c('label',{class:['control-label', 'col-xs-' + (2 * _vm.col)]},[_vm._v("\n    "+_vm._s(_vm.label || _vm.$attrs.id)+":\n  ")]):_vm._e(),_vm._v(" "),_c('div',{class:['col-xs-' + (12 - (_vm.label !== '' ? 2 * _vm.col : 0))]},[(!_vm.static)?_c('vue-inputag',_vm._b({class:_vm.getClass(),attrs:{"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false)):_c('p',{staticClass:"form-control-static"},[_c('vue-inputag',_vm._b({attrs:{"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false))],1),_vm._v(" "),(_vm.error)?_c('span',{staticClass:"help-block"},[_vm._v("\n      "+_vm._s(_vm.error)+"\n    ")]):_vm._e()],1)])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25288,7 +25251,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-3df9cd16", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"libt":74,"vue":90,"vue-hot-reload-api":78,"vue-inputag":80}],95:[function(require,module,exports){
+},{"../json/validate.json":99,"libt":74,"vue":90,"vue-hot-reload-api":78,"vue-inputag":80}],95:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".before {\n  opacity: 0;\n  top: -100px;\n  max-width: 90%;\n  margin: 30px auto;\n}\n.after {\n  top: 0;\n  opacity: 1;\n}")
 ;(function(){
 'use strict';
@@ -25296,10 +25259,6 @@ var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".before 
 var _keys = require('babel-runtime/core-js/object/keys');
 
 var _keys2 = _interopRequireDefault(_keys);
-
-var _lib = require('../lib.js');
-
-var _lib2 = _interopRequireDefault(_lib);
 
 var _form = require('./form.vue');
 
@@ -25312,7 +25271,6 @@ var _vueOverBody2 = _interopRequireDefault(_vueOverBody);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-  mixins: [_lib2.default],
   components: {
     'v-form': _form2.default,
     'vue-over-body': _vueOverBody2.default
@@ -25336,60 +25294,25 @@ module.exports = {
       this.$root.$data.modal = null;
     },
     open: function open(x) {
+      var _this = this;
+
       if (x == null) {
         return;
       }
 
-      if (x.fields instanceof Array && x.fields.length || (0, _keys2.default)(x.model || {}).length) {
+      if ((x.fields || (0, _keys2.default)(x.model || {})).length) {
         this.$data.size = 900;
       } else {
         this.$data.size = 300;
       }
 
-      if (!x.icon || !this.isIcon(x.icon)) {
-        if (x.submit) {
-          x.icon = 'question-circle';
-        } else {
-          x.icon = 'exclamation-circle';
+      x.buttons.forEach(function (button) {
+        if (button.click === 'hide') {
+          button.click = _this.hide;
         }
-      }
-
-      if (!this.isAlert(x.alert)) {
-        if (x.submit) {
-          x.alert = 'info';
-        } else {
-          x.alert = 'danger';
-        }
-      }
-
-      if (x.label == null) {
-        if (this.submit) {
-          this.$data.label2 = this.translate('confirm');
-        } else if (this.$data.alert2 === 'danger') {
-          this.$data.label2 = this.translate('error');
-        } else {
-          this.$data.label2 = this.translate('alert');
-        }
-      }
-
-      x.buttons = x.buttons || [];
-
-      if (x.submit) {
-        x.buttons.push({
-          type: 'primary',
-          icon: 'check',
-          label: this.translate('confirm')
-        });
-      }
-      x.buttons.push({
-        type: 'danger',
-        icon: 'times',
-        label: this.translate('close'),
-        click: this.hide
       });
 
       x.onClose = this.hide;
-
       this.$data.isOpen = ++this.$data.index;
     }
   }
@@ -25411,7 +25334,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-f657698c", __vue__options__)
   }
 })()}
-},{"../lib.js":101,"./form.vue":93,"babel-runtime/core-js/object/keys":2,"vue":90,"vue-hot-reload-api":78,"vue-over-body":82,"vueify/lib/insert-css":91}],96:[function(require,module,exports){
+},{"./form.vue":93,"babel-runtime/core-js/object/keys":2,"vue":90,"vue-hot-reload-api":78,"vue-over-body":82,"vueify/lib/insert-css":91}],96:[function(require,module,exports){
 ;(function(){
 'use strict';
 
@@ -25610,42 +25533,6 @@ module.exports={
 }
 
 },{}],99:[function(require,module,exports){
-module.exports={
-  "en": {
-    "close": "Close",
-    "confirm": "Confirm",
-    "error": "Error",
-    "alert": "Alert",
-    "trueLabel": "Yes",
-    "falseLabel": "No",
-    "date": "MM/dd/yyyy",
-    "numberSeparator": ",",
-    "decimalSeparator": ".",
-    "required": "is required",
-    "min": "is at least {$}",
-    "max": "is at most {$}",
-    "minLen": "is at least {$} character(s)",
-    "maxLen": "is at most {$} character(s)"
-  },
-  "pt-br": {
-    "close": "Fechar",
-    "confirm": "Confirmar",
-    "error": "Erro",
-    "alert": "Aviso",
-    "trueLabel": "Sim",
-    "falseLabel": "Não",
-    "date": "dd/MM/yyyy",
-    "numberSeparator": ".",
-    "decimalSeparator": ",",
-    "required": "é obrigatório",
-    "min": "é no mínimo {$}",
-    "max": "é no máximo {$}",
-    "minLen": "tem no mínimo {$} carácter(es)",
-    "maxLen": "tem no máximo {$} carácter(es)"
-  }
-}
-
-},{}],100:[function(require,module,exports){
 module.exports={
   "Type": [
     "boolean",
@@ -26420,27 +26307,7 @@ module.exports={
   ]
 }
 
-},{}],101:[function(require,module,exports){
-/* global FormData, FileList */
-var lang = require('./json/lang.json');
-var validate = require('./json/validate.json');
-var T = require('libt');
-
-var _ = {};
-
-Object.keys(validate).forEach(function (key) {
-  _['is' + key] = T.contains(validate[key]);
-});
-
-_.translate = function (field) {
-  return lang[this.$root.$data.lang || 'en'][field];
-};
-
-module.exports = {
-  methods: _
-};
-
-},{"./json/lang.json":99,"./json/validate.json":100,"libt":74}],102:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 var form = require('./json/form.json');
 var validate = require('./json/validate.json');
 
@@ -26494,7 +26361,15 @@ module.exports = [{
         submit: function () {
           console.log('submited');
           console.log(this.model);
-        }
+        },
+        buttons: [{
+          type: 'primary',
+          label: 'submit'
+        }, {
+          type: 'danger',
+          label: 'close',
+          click: 'hide'
+        }]
       }
     }
   }]
@@ -26503,4 +26378,4 @@ module.exports = [{
   redirect: '/components/form'
 }];
 
-},{"./json/form.json":98,"./json/validate.json":100}]},{},[92]);
+},{"./json/form.json":98,"./json/validate.json":99}]},{},[92]);

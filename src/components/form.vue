@@ -1,14 +1,13 @@
 <script type="text/babel">
   import T from 'libt'
-  import lib from '../lib.js'
+  import validate from '../json/validate.json'
   import icon from 'vue-awesome'
   import item from './item.vue'
 
   module.exports = {
-    mixins: [lib],
     components: {
-      'icon': icon,
-      'item': item
+      icon: icon,
+      item: item
     },
     props: {
       model: {
@@ -32,12 +31,12 @@
       size: {
         type: String,
         default: 'md',
-        validator: lib.methods.isSize
+        validator: T.contains(validate.Size)
       },
       icon: {
         type: String,
         default: '',
-        validator: lib.methods.isIcon
+        validator: T.contains(validate.Icon)
       },
       label: {
         type: String,
@@ -46,7 +45,7 @@
       alert: {
         type: String,
         default: 'danger',
-        validator: lib.methods.isAlert
+        validator: T.contains(validate.Alert)
       },
       text: {
         type: String,
@@ -272,38 +271,9 @@
           if (!error && empty && field.required) {
             if (field.format.substr(0, 6) === 'string' && !field.options && !field.src) {
               this.$set(this.model, field.id, '')
-            } else {
-              var err = this.translate('required')
-              this.$set(this.fields[i], 'error', `${label} ${err}`)
-              valid = false
-              error = true
             }
           }
-          if (!error && !empty && field.min > this.model[field.id]) {
-            var err = T.replaceAll('{$}', T.format(field.min, field.format, this.translate))(this.translate('min'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.max < this.model[field.id]) {
-            var err = T.replaceAll('{$}', T.format(field.max, field.format, this.translate))(this.translate('max'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.minLen > String(this.model[field.id]).length) {
-            var err = T.replaceAll('{$}', field.minLen)(this.translate('minLen'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.maxLen < String(this.model[field.id]).length) {
-            var err = T.replaceAll('{$}', field.maxLen)(this.translate('maxLen'))
-            this.$set(this.fields[i], 'error', `${label} ${err}`)
-            valid = false
-            error = true
-          }
-          if (!error && !empty && field.validate instanceof Array) {
+          if (!error && field.validate instanceof Array) {
             field.validate.forEach(v => {
               if (!error && !T.evaluate(v.assert)(this.model)) {
                 this.$set(this.fields[i], 'error', `${label} ${v.error}`)
