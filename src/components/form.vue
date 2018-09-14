@@ -321,7 +321,7 @@
       <div 
         v-if="text"
         :class="getClass()" 
-        style="white-space:pre-line;"
+        style="white-space:pre-wrap;"
       ><big>{{text}}</big></div>
       <div style="clear: both;"></div>
     </div>

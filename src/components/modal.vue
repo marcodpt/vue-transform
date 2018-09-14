@@ -16,8 +16,7 @@
       return {
         index: 99999,
         isOpen: 0,
-        size: 0,
-        buttons: []
+        size: 0
       }
     },
     methods: {
@@ -36,11 +35,13 @@
           this.$data.size = 300
         }
 
-        x.buttons.forEach(button => {
-          if (button.click === 'hide') {
-            button.click = this.hide
-          }
-        })
+        if (x.buttons && x.buttons.forEach) {
+          x.buttons.forEach(button => {
+            if (button.click === 'hide') {
+              button.click = this.hide
+            }
+          })
+        }
 
         x.onClose = this.hide
         this.$data.isOpen = ++this.$data.index

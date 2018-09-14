@@ -1,7 +1,7 @@
 {
   "name": "vue-transform",
   "version": "0.0.5",
-  "description": "Vue simple form using json data",
+  "description": "Vue simple form and modal using json data",
   "main": "src/index.vue",
   "repository": {
     "type": "git",
@@ -25,14 +25,15 @@
   },
   "homepage": "https://github.com/marcodpt/vue-transform#readme",
   "scripts": {
-    "server": "http-server -a localhost -p 8080",
+    "cp_ghcorners": "cp node_modules/vue-gh-corners/dist/vue-github-corners.min.css static/",
+    "server": "mkdir -p static && npm run cp_ghcorners && http-server -a localhost -p 8080",
     "build": "browserify -e src/app.vue -o app.js"
   },
   "dependencies": {
     "libt": "0.0.4",
     "vue-awesome": "^3.0.5",
     "vue-inputag": "0.0.3",
-    "vue-over-body": "0.0.4"
+    "vue-over-body": "0.0.5"
   },
   "browserify": {
     "transform": [
@@ -54,7 +55,6 @@
     "http-server": "^0.11.1",
     "vue": "^2.4.1",
     "vueify": "^9.4.1",
-    "vue-router": "^3.0.1",
-    "vue-tree-nav": "0.0.8"
+    "vue-gh-corners": "^2.0.0"
   }
 }

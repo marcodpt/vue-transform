@@ -1,5 +1,4 @@
 var form = require('./json/form.json')
-var validate = require('./json/validate.json')
 
 form.fields.forEach((field, i) => {
   if (field.source === '&country') {
@@ -43,30 +42,6 @@ module.exports = [
           tests: {
             model: form.model,
             label: 'Test form'
-          }
-        }
-      }, {
-        path: 'modal',
-        component: 'tests',
-        props: {
-          component: 'modal',
-          tests: {
-            model: form.model,
-            fields: form.fields,
-            submit: function () {
-              console.log('submited')
-              console.log(this.model)
-            },
-            buttons: [
-              {
-                type: 'primary',
-                label: 'submit'
-              }, {
-                type: 'danger',
-                label: 'close',
-                click: 'hide'
-              }
-            ]
           }
         }
       }
