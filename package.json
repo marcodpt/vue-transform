@@ -49,12 +49,11 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-runtime": "^6.26.0",
     "babelify": "^8.0.0",
-    "bootstrap": "~3.3.7",
     "browser-run": "^5.0.0",
     "browserify": "^15.2.0",
     "http-server": "^0.11.1",
     "vue": "^2.4.1",
-    "vueify": "^9.4.1",
-    "vue-gh-corners": "^2.0.0"
+    "vue-gh-corners": "^2.0.0",
+    "vueify": "^9.4.1"
   }
 }
