@@ -45,17 +45,6 @@
       }
     },
     methods: {
-      getOptions: function () {
-        return this.format === 'boolean' ? [
-          {
-            id: 0,
-            label: 'Não'
-          }, {
-            id: 1,
-            label: 'Sim'
-          }
-        ] : this.$attrs.options
-      },
       getType: function () {
         var F = this.format.split(':')
 
@@ -63,8 +52,10 @@
           return ''
         }
 
-        if (this.$attrs.options || this.$attrs.source || F[0] === 'boolean') {
+        if (this.$attrs.options || this.$attrs.source) {
           return 'select'
+        } else if (F[0] === 'boolean') {
+          return 'checkbox'
         } else if (F[0] === 'date') {
           return 'date'
         } else if (F[0] === 'json') {
@@ -111,18 +102,19 @@
     >
       {{label || $attrs.id}}:
     </label>
-    <div :class="['col-xs-' + (12 - (label !== '' ? 2 * col : 0))]">
+    <div :class="[
+      'col-xs-' + (12 - (label !== '' ? 2 * col : 0)),
+      getType() === 'checkbox' ? 'checkbox' : ''
+    ]">
       <vue-inputag
         v-if="!static"
         v-bind="$attrs"
         :class="getClass()"
-        :options="getOptions()"
         :type="getType()"
       />
       <p v-else class="form-control-static">
         <vue-inputag
           v-bind="$attrs"
-          :options="getOptions()"
           :type="getType()"
         />
       </p>

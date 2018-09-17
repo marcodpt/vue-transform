@@ -1191,7 +1191,7 @@ T.parse = function (format) {
       if (!(typeof format === 'string')) {
         return value
       } else if (format.split(':')[0] === 'boolean') {
-        return 0
+        return false
       } else if (format.split(':')[0] === 'date' || format.split(':')[0] === 'string') {
         return ''
       } else {
@@ -1207,9 +1207,9 @@ T.parse = function (format) {
 
     if (type === 'boolean') {
       if (value && value !== 'false' && value !== '0') {
-        return 1
+        return true
       } else {
-        return 0
+        return false
       }
     } else if (type === 'integer') {
       x = parseInt(value)
@@ -1752,103 +1752,6 @@ T.sync = function (Output, Input, syncFnc) {
   Object.keys(Input).forEach(key => {
     syncFnc(Output, key, Input[key])
   })
-}
-
-/*
-  format raw database data into human readable data
-
-  @func format
-  @param {mixed} value - raw value
-  @param {string} format - String with format
-  @param {translateFnc} translateFnc - Function that will return some values: trueLabel, falseLabel, numberSeparator, decimalSeparator, date (ex.yyyy-MM-dd)
-  @callback translateFnc
-  @param {string} query - information queried
-  @return {string} formatted data
-  @example
-
-  T.format(2.58, 'boolean') //=> true
-  T.format(2.58, 'integer') //=> 2
-  T.format(2.58, 'integer:4') //=> 0002
-  T.format(2.58, 'number') //=> 2.58
-  T.format(2.58, 'number:1') //=> 2.6
-  T.format(2.58, 'number:3') //=> 2.580
-  T.format('2018-08-31T12:18:46+00:00', 'string') //=> 2018-08-31T12:18:46+00:00
-  T.format('2018-08-31T12:18:46+00:00', 'string:10') //=> 2018-08-31
-  T.format('2018-08-31T12:18:46+00:00', 'date') //=> 2018-08-31
-
-*/
-T.format = function (value, format, translate) {
-  if (value === null || value === undefined) {
-    return ''
-  }
-  if (typeof translate !== 'function') {
-    translate = () => {}
-  }
-
-  if (typeof format !== 'string') {
-    format = ''
-  }
-
-  var F = format.split(':')
-  var type = F[0]
-  var p1 = parseInt(F[1] || 0)
-  var x, s
-
-  if (type === 'boolean') {
-    if (value && value !== '0' && value !== 'false') {
-      return translate('trueLabel') || 'true'
-    } else {
-      return translate('falseLabel') || 'false'
-    }
-  } else if (type === 'integer') {
-    x = parseInt(value)
-    if (!isNaN(x)) {
-      s = String(x)
-      while (s.length < p1) {
-        s = '0' + s
-      }
-      return s
-    }
-  } else if (type === 'number') {
-    x = parseFloat(value)
-    if (!isNaN(x)) {
-      if (p1 > 0 || (p1 === 0 && F[1] === '0')) {
-        s = String(x.toFixed(p1))
-      } else {
-        s = String(x)
-      }
-      var N = s.split('.')
-      N[0] = N[0].replace(/(\d)(?=(\d{3})+$)/g, '$1' + (translate('numberSeparator') || ''))
-      N[1] = N.length > 1 ? (translate('decimalSeparator') || '.') + N[1] : ''
-      return N[0] + N[1]
-    }
-  } else if (type === 'string') {
-    s = String(value)
-    if (F.indexOf('rgb') > -1) {
-      return ''
-    }
-    if (p1) {
-      return s.substr(0, p1)
-    }
-    return s
-  } else if (type === 'date' && T.match('date')(value)) {
-    s = String(value)
-    var D = {
-      yyyy: s.substr(0, 4),
-      yy: s.substr(2, 2),
-      MM: s.substr(5, 2),
-      M: parseInt(s.substr(5, 2)),
-      dd: s.substr(8, 2),
-      d: parseInt(s.substr(8, 2))
-    }
-    x = translate('date') || 'yyyy-MM-dd'
-    Object.keys(D).forEach(function (key) {
-      x = x.replace(new RegExp(key, 'g'), D[key])
-    })
-    return x
-  }
-
-  return String(value)
 }
 
 /*
@@ -22621,15 +22524,6 @@ module.exports = {
     }
   },
   methods: {
-    getOptions: function getOptions() {
-      return this.format === 'boolean' ? [{
-        id: 0,
-        label: 'Não'
-      }, {
-        id: 1,
-        label: 'Sim'
-      }] : this.$attrs.options;
-    },
     getType: function getType() {
       var F = this.format.split(':');
 
@@ -22637,8 +22531,10 @@ module.exports = {
         return '';
       }
 
-      if (this.$attrs.options || this.$attrs.source || F[0] === 'boolean') {
+      if (this.$attrs.options || this.$attrs.source) {
         return 'select';
+      } else if (F[0] === 'boolean') {
+        return 'checkbox';
       } else if (F[0] === 'date') {
         return 'date';
       } else if (F[0] === 'json') {
@@ -22677,7 +22573,10 @@ __vue__options__.render = function render () {var _vm=this;var _h=_vm.$createEle
     'form-group-' + _vm.size,
     _vm.error ? 'has-error': '', 
     _vm.col > 0 ? ('col-xs-' + Math.floor(12 / _vm.col)) : ''
-  ]},[(_vm.label !== '' && _vm.col)?_c('label',{class:['control-label', 'col-xs-' + (2 * _vm.col)]},[_vm._v("\n    "+_vm._s(_vm.label || _vm.$attrs.id)+":\n  ")]):_vm._e(),_vm._v(" "),_c('div',{class:['col-xs-' + (12 - (_vm.label !== '' ? 2 * _vm.col : 0))]},[(!_vm.static)?_c('vue-inputag',_vm._b({class:_vm.getClass(),attrs:{"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false)):_c('p',{staticClass:"form-control-static"},[_c('vue-inputag',_vm._b({attrs:{"options":_vm.getOptions(),"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false))],1),_vm._v(" "),(_vm.error)?_c('span',{staticClass:"help-block"},[_vm._v("\n      "+_vm._s(_vm.error)+"\n    ")]):_vm._e()],1)])}
+  ]},[(_vm.label !== '' && _vm.col)?_c('label',{class:['control-label', 'col-xs-' + (2 * _vm.col)]},[_vm._v("\n    "+_vm._s(_vm.label || _vm.$attrs.id)+":\n  ")]):_vm._e(),_vm._v(" "),_c('div',{class:[
+    'col-xs-' + (12 - (_vm.label !== '' ? 2 * _vm.col : 0)),
+    _vm.getType() === 'checkbox' ? 'checkbox' : ''
+  ]},[(!_vm.static)?_c('vue-inputag',_vm._b({class:_vm.getClass(),attrs:{"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false)):_c('p',{staticClass:"form-control-static"},[_c('vue-inputag',_vm._b({attrs:{"type":_vm.getType()}},'vue-inputag',_vm.$attrs,false))],1),_vm._v(" "),(_vm.error)?_c('span',{staticClass:"help-block"},[_vm._v("\n      "+_vm._s(_vm.error)+"\n    ")]):_vm._e()],1)])}
 __vue__options__.staticRenderFns = []
 if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -22898,7 +22797,8 @@ module.exports={
     "integer",
     "number",
     "date",
-    "string"
+    "string",
+    "json"
   ],
   "Alert": [
     "success",
