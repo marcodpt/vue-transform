@@ -46,6 +46,9 @@
           model: form.model,
           fields: form.fields,
           submit: function (model) {
+            console.log('You submmitted me')
+            console.log(model)
+            console.log(model.file)
             setTimeout(() => {
               this.$set(this.$root.$data, 'modal', {
                 label: 'Success',

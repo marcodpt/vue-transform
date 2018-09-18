@@ -251,7 +251,9 @@
 
         this.fields.forEach((field, i) => {
           field.format = field.format || 'string'
-          this.$set(this.model, field.id, T.parse(field.format)(this.model[field.id]))
+          if (field.format.indexOf(':file') === -1) {
+            this.$set(this.model, field.id, T.parse(field.format)(this.model[field.id]))
+          }
           this.$set(this.fields[i], 'error', '')
           var error = false
           var empty = this.model[field.id] == null

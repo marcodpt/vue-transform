@@ -22045,6 +22045,9 @@ new _vue2.default({
         submit: function submit(model) {
           var _this = this;
 
+          console.log('You submmitted me');
+          console.log(model);
+          console.log(model.file);
           setTimeout(function () {
             _this.$set(_this.$root.$data, 'modal', {
               label: 'Success',
@@ -22403,7 +22406,9 @@ module.exports = {
 
       this.fields.forEach(function (field, i) {
         field.format = field.format || 'string';
-        _this3.$set(_this3.model, field.id, _libt2.default.parse(field.format)(_this3.model[field.id]));
+        if (field.format.indexOf(':file') === -1) {
+          _this3.$set(_this3.model, field.id, _libt2.default.parse(field.format)(_this3.model[field.id]));
+        }
         _this3.$set(_this3.fields[i], 'error', '');
         var error = false;
         var empty = _this3.model[field.id] == null;
