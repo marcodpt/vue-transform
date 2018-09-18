@@ -1,6 +1,6 @@
 {
   "name": "vue-transform",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Vue simple form and modal using json data",
   "main": "src/index.vue",
   "repository": {
