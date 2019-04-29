@@ -35,8 +35,7 @@
       },
       icon: {
         type: String,
-        default: '',
-        validator: T.contains(validate.Icon)
+        default: ''
       },
       label: {
         type: String,
